@@ -1,0 +1,39 @@
+<div class="game-over">
+  <div class="game-over__card glass">
+    @if (isAbandoned() && isWinner()) {
+      <svg class="game-over__icon game-over__icon--win" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="48" height="48" aria-hidden="true">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+      <h1 class="game-over__title game-over__title--win">¡Ganaste!</h1>
+      <p class="game-over__subtitle">Tu oponente abandonó la partida.</p>
+    } @else if (isAbandoned() && !isWinner()) {
+      <svg class="game-over__icon game-over__icon--lose" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="48" height="48" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/>
+      </svg>
+      <h1 class="game-over__title game-over__title--lose">Perdiste</h1>
+      <p class="game-over__subtitle">Abandonaste la partida.</p>
+    } @else if (isDraw()) {
+      <svg class="game-over__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="48" height="48" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><path d="M8 12h8"/>
+      </svg>
+      <h1 class="game-over__title">Empate</h1>
+      <p class="game-over__subtitle">Ambos jugadores alcanzaron la condición de victoria simultáneamente.</p>
+    } @else if (isWinner()) {
+      <svg class="game-over__icon game-over__icon--win" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="48" height="48" aria-hidden="true">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+      <h1 class="game-over__title game-over__title--win">¡Ganaste!</h1>
+      <p class="game-over__subtitle">Cartas de premio tomadas: {{ prizeCardsTaken() }}</p>
+    } @else {
+      <svg class="game-over__icon game-over__icon--lose" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="48" height="48" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6"/><path d="M9 9l6 6"/>
+      </svg>
+      <h1 class="game-over__title game-over__title--lose">Perdiste</h1>
+      <p class="game-over__subtitle">Cartas de premio tomadas: {{ prizeCardsTaken() }}</p>
+    }
+
+    <a routerLink="/lobby">
+      <app-button variant="primary" size="lg">Volver al Lobby</app-button>
+    </a>
+  </div>
+</div>

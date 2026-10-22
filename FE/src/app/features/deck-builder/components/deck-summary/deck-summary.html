@@ -1,0 +1,73 @@
+<div class="summary glass">
+  <header class="summary__head">
+    <h2 class="summary__title">Requisitos</h2>
+    <span
+      class="summary__badge"
+      [class.summary__badge--valid]="allMet()"
+      [class.summary__badge--invalid]="!allMet()"
+    >
+      {{ metCount() }}/{{ requirements().length }}
+    </span>
+  </header>
+
+  <!-- Desglose por supertipo -->
+  <div class="breakdown">
+    <div class="breakdown__item">
+      <span class="breakdown__value">{{ breakdown().pokemon }}</span>
+      <span class="breakdown__label">Pokémon</span>
+    </div>
+    <div class="breakdown__item">
+      <span class="breakdown__value">{{ breakdown().trainer }}</span>
+      <span class="breakdown__label">Entrenador</span>
+    </div>
+    <div class="breakdown__item">
+      <span class="breakdown__value">{{ breakdown().energy }}</span>
+      <span class="breakdown__label">Energía</span>
+    </div>
+  </div>
+
+  <!-- Checklist de requisitos (en vivo) -->
+  <ul class="reqs">
+    @for (req of requirements(); track req.label) {
+      <li class="req" [class.req--met]="req.met">
+        @if (req.met) {
+          <svg class="req__mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        } @else {
+          <svg class="req__mark req__mark--unmet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+        }
+        <span class="req__label">{{ req.label }}</span>
+        <span class="req__detail">{{ req.detail }}</span>
+      </li>
+    }
+  </ul>
+
+  <!-- Errores del backend (tras guardar) -->
+  @if (errors().length > 0) {
+    <div class="summary__errors">
+      <h3 class="summary__errors-title">Validación del servidor</h3>
+      <ul role="alert">
+        @for (error of errors(); track $index) {
+          <li class="summary__error">
+            <svg class="summary__error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true">
+              <path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/>
+            </svg>
+            <span>{{ error }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  } @else if (validationResult()?.isValid) {
+    <div class="summary__ok">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+      Mazo válido y guardado
+    </div>
+  }
+
+  <p class="summary__note">Reglas oficiales del Pokémon TCG (formato XY1).</p>
+</div>

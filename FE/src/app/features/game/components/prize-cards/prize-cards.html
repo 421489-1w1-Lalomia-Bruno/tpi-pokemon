@@ -1,0 +1,40 @@
+<div class="pile"
+  [class.pile--empty]="isEmpty()"
+  [class.pile--selectable]="selectable()"
+  [attr.aria-label]="label() + ': ' + count() + ' restantes'"
+>
+  @if (selectable() && cards().length > 0) {
+    <div class="pile__selection">
+      @for (card of cards(); track card.id; let i = $index) {
+        <button
+          class="pile__selectable-card"
+          type="button"
+          (click)="onSlotClick(i)"
+        >
+          <span class="pile__selectable-card-type" [attr.data-type]="card.type"></span>
+          <span class="pile__selectable-card-name">{{ card.name }}</span>
+        </button>
+      }
+    </div>
+    <span class="pile__count pile__count--prize">{{ count() }}</span>
+    <span class="pile__label">Seleccionar premio</span>
+  } @else {
+    <div class="pile__fan">
+      @for (s of slots(); track $index) {
+        <div
+          class="pile__prize-slot"
+          [class.pile__prize-slot--taken]="s === 0"
+          [style.rotate]="(($index - 2.5) * 4) + 'deg'"
+          [style.translate]="(($index - 2.5) * 4) + 'px'"
+          [style.z-index]="$index"
+        >
+          @if (s === 1) {
+            <div class="pile__prize-back"></div>
+          }
+        </div>
+      }
+    </div>
+    <span class="pile__count pile__count--prize">{{ count() }}</span>
+    <span class="pile__label">{{ label() }}</span>
+  }
+</div>

@@ -1,0 +1,19 @@
+<div class="pile" [class.pile--empty]="isEmpty()" [attr.aria-label]="label() + ': ' + count() + ' cartas'">
+  <div class="pile__stack">
+    @if (!isEmpty()) {
+      @for (i of [2, 1]; track i) {
+        <div class="pile__card-bg" [style.z-index]="i" [style.transform]="'translateY(' + (i * 2) + 'px) rotate(' + ((i % 2 === 0 ? 1 : -1) * 0.8) + 'deg)'"></div>
+      }
+      <div class="pile__card-top" style="z-index: 3" (click)="onTopCardClick()" role="button" tabindex="0">
+        <span class="pile__card-name">{{ topCard()!.name }}</span>
+        @if (topCardType()) {
+          <span class="pile__card-type" [attr.data-type]="topCardType()">{{ topCardType() }}</span>
+        }
+      </div>
+    } @else {
+      <div class="pile__card-bg pile__card-bg--empty"></div>
+    }
+  </div>
+  <span class="pile__count">{{ count() }}</span>
+  <span class="pile__label">{{ label() }}</span>
+</div>

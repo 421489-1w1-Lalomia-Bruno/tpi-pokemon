@@ -1,0 +1,62 @@
+<main class="pokedex">
+  <header class="hero">
+    <div class="hero__glow" aria-hidden="true"></div>
+    <p class="hero__eyebrow">Colección · Expansión XY — Kalos</p>
+    <h1 class="hero__title">Pokédex <span>XY1</span></h1>
+
+    <div class="controls">
+      <div class="search">
+        <span class="search__icon" aria-hidden="true">⌕</span>
+        <input
+          class="search__input"
+          type="search"
+          placeholder="Buscar carta por nombre…"
+          [value]="search()"
+          (input)="onSearch($any($event.target).value)"
+          aria-label="Buscar carta"
+        />
+      </div>
+
+      <div class="filters" role="group" aria-label="Filtrar por tipo">
+        @for (filter of filters; track filter) {
+          <button
+            type="button"
+            class="filter-chip"
+            [class.is-active]="activeFilter() === filter"
+            (click)="setFilter(filter)"
+          >
+            {{ filter }}
+          </button>
+        }
+      </div>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="state loading" role="status" aria-live="polite">
+      <app-loading-spinner size="lg" text="Cargando cartas…" />
+    </div>
+  } @else if (error()) {
+    <div class="state error" role="alert">
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    <p class="result-count">
+      {{ filteredCards().length }} de {{ totalCards() }} cartas
+    </p>
+
+    <section class="gallery" aria-label="Listado de cartas">
+      @for (card of filteredCards(); track card.id) {
+        <app-card [cardModel]="card" (activated)="openCard($event)" />
+      } @empty {
+        <div class="state empty" role="status" aria-live="polite">
+          <span class="state__ball state__ball--dim" aria-hidden="true"></span>
+          <h2>Sin resultados</h2>
+          <p>No hay cartas que coincidan con tu búsqueda.</p>
+        </div>
+      }
+    </section>
+  }
+</main>
+
+<app-card-zoom [card]="selectedCard()" (close)="closeCard()" />

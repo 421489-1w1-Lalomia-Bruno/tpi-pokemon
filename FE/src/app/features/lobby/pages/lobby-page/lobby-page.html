@@ -1,0 +1,30 @@
+<!-- Fondo animado de energía / partículas -->
+<div class="lobby-bg" aria-hidden="true">
+  <span class="orb orb--1"></span>
+  <span class="orb orb--2"></span>
+  <span class="orb orb--3"></span>
+  <span class="orb orb--4"></span>
+  <span class="orb orb--5"></span>
+  <div class="lobby-bg__pulse"></div>
+</div>
+
+<main class="lobby">
+  <header class="lobby__hero">
+    <p class="lobby__eyebrow">Multijugador en tiempo real</p>
+    <h1 class="lobby__title">Sala de <span>Espera</span></h1>
+    <p class="lobby__subtitle">Uníte a una partida disponible o creá la tuya y esperá rival.</p>
+
+    <app-button variant="primary" size="lg" (click)="openCreateDialog()">
+      <span aria-hidden="true">＋</span>
+      Crear partida
+    </app-button>
+  </header>
+
+  <section class="lobby__content" aria-label="Listado de partidas">
+    <app-match-list />
+  </section>
+</main>
+
+@if (showCreateDialog()) {
+  <app-create-match-dialog (close)="closeCreateDialog()" />
+}

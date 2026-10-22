@@ -1,0 +1,69 @@
+.target-selector-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.target-selector-modal {
+  background: #1a1a2e;
+  border: 1px solid #e94560;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  color: white;
+}
+
+.target-selector-modal h2 {
+  margin: 0 0 0.5rem;
+  color: #e94560;
+}
+
+.target-selector-modal__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.target-selector-modal__card {
+  background: #16213e;
+  border: 1px solid #0f3460;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  color: white;
+  min-width: 120px;
+}
+
+.target-selector-modal__card:hover {
+  border-color: #e94560;
+}
+
+.target-selector-modal__card-name {
+  display: block;
+  font-weight: bold;
+}
+
+.target-selector-modal__card-hp {
+  display: block;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.target-selector-modal__cancel {
+  background: transparent;
+  border: 1px solid #555;
+  color: #aaa;
+  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}

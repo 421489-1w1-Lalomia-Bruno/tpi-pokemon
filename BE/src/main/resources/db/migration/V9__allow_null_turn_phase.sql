@@ -1,0 +1,1 @@
+ALTER TABLE game_states ALTER COLUMN turn_phase DROP NOT NULL;

@@ -1,0 +1,5 @@
+.app-main {
+  min-height: calc(100vh - var(--appbar-h, 68px));
+  display: flex;
+  flex-direction: column;
+}

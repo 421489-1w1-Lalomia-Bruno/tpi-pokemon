@@ -1,0 +1,9 @@
+export const SPECIAL_CONDITIONS = {
+  ASLEEP: 'ASLEEP',
+  BURNED: 'BURNED',
+  CONFUSED: 'CONFUSED',
+  PARALYZED: 'PARALYZED',
+  POISONED: 'POISONED',
+} as const;
+
+export type SpecialCondition = typeof SPECIAL_CONDITIONS[keyof typeof SPECIAL_CONDITIONS];

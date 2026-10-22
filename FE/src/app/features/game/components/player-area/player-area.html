@@ -1,0 +1,34 @@
+<div class="player-area">
+  <div class="player-area__top-row">
+    <div class="player-area__piles">
+      <app-deck-pile [cards]="myDeck()" />
+      <app-discard-pile [cards]="myDiscard()" />
+      <app-prize-cards [cards]="myPrizes()" />
+    </div>
+
+    <div class="player-area__active">
+      <app-active-pokemon
+        [pokemon]="myActive()"
+        [isMyTurn]="isMyTurn()"
+        [phase]="phase()"
+        [evolvablePokemonIds]="evolvablePokemonIds()"
+        (cardDropped)="onCardDropped($event)"
+      />
+    </div>
+
+    <aside class="player-area__log">
+      <app-game-log [entries]="events()" [myPlayerId]="gameState.myPlayerId()" />
+    </aside>
+  </div>
+
+  <div class="player-area__bench">
+    <app-bench-area
+      [pokemon]="myBench()"
+      [isMyTurn]="isMyTurn()"
+      [phase]="phase()"
+      [evolvablePokemonIds]="evolvablePokemonIds()"
+      (cardDropped)="onCardDropped($event)"
+    />
+  </div>
+
+</div>

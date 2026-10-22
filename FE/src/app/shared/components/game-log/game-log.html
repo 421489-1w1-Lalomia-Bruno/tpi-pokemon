@@ -1,0 +1,50 @@
+<div class="log" [class.log--collapsed]="collapsed()">
+  <button class="log__toggle" type="button" (click)="toggleCollapse()">
+    <svg class="log__toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="10" height="10" aria-hidden="true">
+      @if (collapsed()) {
+        <polyline points="9 18 15 12 9 6"/>
+      } @else {
+        <polyline points="6 9 12 15 18 9"/>
+      }
+    </svg>
+    <span class="log__toggle-label">Registro</span>
+    <span class="log__toggle-count">{{ entries().length }}</span>
+  </button>
+
+  @if (!collapsed()) {
+    <div class="log__entries">
+      @if (entries().length === 0) {
+        <div class="log__empty">Sin eventos aún</div>
+      } @else {
+        @for (entry of entries(); track entry.timestamp) {
+          <div class="log__entry"
+               [class.log__entry--damage]="isDamage(entry)"
+               [class.log__entry--heal]="isHeal(entry)"
+               [class.log__entry--self]="entry.playerId === myPlayerId()"
+               [class.log__entry--opponent]="entry.playerId !== myPlayerId() && entry.playerId !== ''">
+            <span class="log__entry-time">{{ formatTime(entry.timestamp) }}</span>
+            <span class="log__entry-actor">{{ entry.playerId === myPlayerId() ? 'Tú' : entry.playerId !== '' ? 'Rival' : '' }}</span>
+            <span class="log__entry-desc">
+              @if (hasStructuredDamage(entry)) {
+                @if (isMyAttack(entry)) {
+                  <span class="log__entry-action">Atacaste</span>
+                  <span class="log__entry-arrow">→</span>
+                  <span class="log__entry-target">{{ entry.target }}</span>
+                  <span class="log__entry-sign">&nbsp;({{ entry.value! > 0 ? '-' : '' }}{{ entry.value }} HP)</span>
+                } @else {
+                  <span class="log__entry-action">Recibiste</span>
+                  <span class="log__entry-arrow">←</span>
+                  <span class="log__entry-source">{{ entry.source }}</span>
+                  <span class="log__entry-sign">&nbsp;({{ entry.value! > 0 ? '-' : '' }}{{ entry.value }} HP)</span>
+                }
+              } @else {
+                {{ entry.description }}
+              }
+            </span>
+          </div>
+        }
+      }
+      <div #listEnd></div>
+    </div>
+  }
+</div>

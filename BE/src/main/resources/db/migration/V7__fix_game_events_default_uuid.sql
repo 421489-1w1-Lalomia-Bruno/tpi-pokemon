@@ -1,0 +1,2 @@
+-- UUID generation handled by JPA @GeneratedValue(strategy = GenerationType.UUID) in BaseEntity
+-- No SQL-level default needed; this migration ensures compatibility across H2 and PostgreSQL

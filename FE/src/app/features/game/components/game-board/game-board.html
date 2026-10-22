@@ -1,0 +1,188 @@
+<section cdkDropListGroup class="game-board" tabindex="-1">
+  <!-- ═══ Zona rival ═══ -->
+  <div class="game-board__opponent">
+    <app-opponent-area [board]="opponentBoard()" />
+  </div>
+
+  <!-- ═══ Battle line + acciones ═══ -->
+  <div class="game-board__battle-line" [class.game-board__battle-line--active]="gameState.isMyTurn()">
+    <div class="game-board__battle-line-left"></div>
+    <app-action-panel
+      [isMyTurn]="gameState.isMyTurn()"
+      [turnContext]="gameState.turnContext()"
+      [hasActive]="gameState.myActivePokemon() !== null"
+      [hasEnergyInHand]="energyCardsInHand().length > 0"
+      [hasValidEvolution]="validEvolutionPairs().length > 0"
+      [hasTrainerInHand]="trainerCardsInHand().length > 0"
+      [activeAbilities]="activePokemonAbilities()"
+      [canUseAbility]="canUseAbility()"
+      [myTimeMs]="gameState.myTimeRemainingMs()"
+      [opponentTimeMs]="gameState.opponentTimeRemainingMs()"
+      [abandonmentCountdownMs]="gameState.abandonmentCountdownMs()"
+      [lastTrainerName]="gameState.lastTrainerPlayed()"
+      (passTurn)="onPassTurn()"
+      (playTrainer)="onPlayTrainer()"
+      (attack)="onAttack()"
+      (evolve)="onEvolve()"
+      (retreat)="onRetreat()"
+      (attachEnergy)="onAttachEnergy()"
+      (surrender)="onSurrender()"
+      (useAbility)="onUseAbility()"
+    />
+    <div class="game-board__battle-line-right"></div>
+  </div>
+
+  <!-- ═══ Zona jugador ═══ -->
+  <div class="game-board__player" [class.game-board__player--active]="gameState.isMyTurn()">
+    <app-player-area [evolvablePokemonIds]="evolvablePokemonIds()" />
+  </div>
+  <app-stadium-area [stadium]="gameState.matchState()?.board?.sharedStadium ?? null" />
+
+
+  <!-- ═══ Drawer de mano ═══ -->
+  <app-hand-drawer />
+
+  <!-- ═══ Modales ═══ -->
+  @if (showQuickCoinFlip()) {
+    <app-coin-flip
+      [flipResult]="quickFlipResult()"
+      [customMessage]="quickFlipMessage()"
+      [durationMs]="2000"
+      (finished)="onQuickCoinFlipFinished()"
+    />
+  }
+  <app-promote-modal
+    [show]="gameState.mustPromoteActive()"
+    [benchPokemon]="gameState.myBoard()?.board?.bench ?? []"
+    (promote)="onPromote($event)"
+  />
+  <app-attack-selector
+    [show]="showAttackSelector()"
+    [attacks]="activePokemonAttacks()"
+    (attackSelected)="onAttackSelected($event)"
+    (cancel)="onCancelAttackSelector()"
+  />
+  <app-evolution-selector
+    [show]="showEvolutionSelector()"
+    [pairs]="validEvolutionPairs()"
+    (pairSelected)="onEvolutionSelected($event)"
+    (cancel)="onCancelEvolutionSelector()"
+  />
+  <app-energy-attachment
+    [show]="showEnergyAttachment()"
+    [energyCards]="energyCardsInHand()"
+    [targets]="validTargets()"
+    (pairSelected)="onEnergySelected($event)"
+    (cancel)="onCancelEnergyAttachment()"
+  />
+
+  <app-trainer-selector
+    [show]="showTrainerSelector()"
+    [trainers]="playableTrainers()"
+    [targets]="validTargets()"
+    (trainerSelected)="onTrainerSelected($event)"
+    (targetSelected)="onTrainerTargetSelected($event)"
+    (cancel)="onCancelTrainerSelector()"
+  />
+
+  <app-retreat-modal
+    [show]="showRetreatSelector()"
+    [benchPokemon]="gameState.myBoard()?.board?.bench ?? []"
+    (retreat)="onRetreatSelected($event)"
+    (cancel)="onCancelRetreatSelector()"
+  />
+
+  <app-card-zoom
+    [card]="cardZoom.zoomedCard()"
+    [attachedEnergy]="cardZoom.attachedEnergy()"
+    [attachedTool]="cardZoom.attachedTool()"
+    (close)="cardZoom.close()"
+  />
+
+  <!-- ═══ Reveal (Great Ball): elegir Pokémon del top del mazo ═══ -->
+  @if (gameState.mustResolveReveal()) {
+    <app-reveal-modal
+      [cards]="gameState.revealedCards()"
+      [faceDown]="isFaceDownReveal()"
+      (cardSelected)="onRevealCardSelected($event)"
+      (skip)="onRevealSkip()"
+    />
+  }
+
+  <!-- ═══ Selección de cartas de premio ═══ -->
+  @if (showPrizeSelection()) {
+    <div class="confirm-overlay">
+      <div class="confirm-modal">
+        <h2 class="confirm-modal__title">Seleccionar carta de premio</h2>
+        <p class="confirm-modal__body">Elige una carta de premio para tomar ({{ myPrizeCards().length }} restantes).</p>
+        <app-prize-cards
+          [cards]="myPrizeCards()"
+          [selectable]="true"
+          (prizeSelected)="onPrizeSelected($event)"
+        />
+      </div>
+    </div>
+  }
+
+  <!-- ═══ Confirmación de rendición ═══ -->
+  @if (showSurrenderConfirm()) {
+    <div class="confirm-overlay">
+      <div class="confirm-modal">
+        <div class="confirm-modal__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+            <line x1="4" y1="22" x2="4" y2="15"/>
+          </svg>
+        </div>
+        <h2 class="confirm-modal__title">¿Rendirse?</h2>
+        <p class="confirm-modal__body">Vas a abandonar la partida.<br>Tu oponente será el ganador.</p>
+        <div class="confirm-modal__actions">
+          <app-button variant="ghost" size="sm" (click)="onCancelSurrender()">
+            Cancelar
+          </app-button>
+          <app-button variant="danger" size="sm" (click)="onConfirmSurrender()">
+            Rendirme
+          </app-button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ═══ Carta revelada del rival (Astonish y similares) ═══ -->
+  @if (showRevealedCard(); as card) {
+    <div class="confirm-overlay" (click)="dismissRevealedCard()">
+      <div class="confirm-modal" (click)="$event.stopPropagation()">
+        <h2 class="confirm-modal__title">Carta revelada</h2>
+        <p class="confirm-modal__body">El rival reveló {{ card.name }} de su mano. La carta fue devuelta a su mazo.</p>
+        @if (revealedCardModel(); as model) {
+          <div style="max-width: 200px; margin: 0 auto;">
+            <app-card [cardModel]="model" [interactive]="false" />
+          </div>
+        }
+        <div class="confirm-modal__actions" style="margin-top: 1rem;">
+          <app-button variant="ghost" size="sm" (click)="dismissRevealedCard()">OK</app-button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ═══ Selección de target para multi-coin (Seafaring y similares) ═══ -->
+  <app-target-selector-modal
+    [show]="showTargetSelector()"
+    [benchPokemon]="gameState.myBoard()?.board?.bench ?? []"
+    [remaining]="gameState.pendingMultiCoinTargets()"
+    (targetSelected)="onTargetSelected($event)"
+    (cancel)="onCancelTargetSelector()"
+  />
+
+  <!-- ═══ Transferencia de energía (Fairy Transfer y similares) ═══ -->
+  @if (showEnergyTransfer()) {
+    <app-energy-transfer-modal
+      [pokemonList]="allMyPokemon()"
+      energyType="FAIRY"
+      (transfer)="onTransferEnergy($event)"
+      (cancel)="onCancelEnergyTransfer()"
+    />
+  }
+
+</section>

@@ -1,0 +1,57 @@
+<div
+  cdkDropList
+  id="activeZone"
+  [cdkDropListData]="pokemon()"
+  class="active-slot"
+  [class.active-slot--filled]="!!pokemon()"
+  [class.active-slot--empty]="!pokemon()"
+  [class.active-slot--active]="isMyTurn() && phase() === 'ACTIONS'"
+  (cdkDropListDropped)="cardDropped.emit($event)"
+>
+  @if (pokemon(); as poke) {
+    <div class="active-card" [class.active-card--confused]="isConfused()">
+      <div class="active-card__card-wrapper" [class.card-wrapper--confused]="isConfused()">
+        <app-card [cardModel]="cardModel()" [interactive]="false" [energy]="attachedEnergyTypes()" (activated)="onCardClick()" />
+        @if (pokemon()?.tool; as tool) {
+          <div class="tool-overlay" (click)="onToolClick(tool)">
+            <img [src]="tool.imageUrl" alt="{{ tool.name }}" class="tool-overlay__img" />
+          </div>
+        }
+      </div>
+
+      <div class="active-card__info">
+        <div class="active-card__name-row">
+          <span class="active-card__name">{{ poke.card.name }}</span>
+        </div>
+
+        <div class="active-card__hp-row">
+          <app-damage-counter
+            [currentHp]="poke.currentHp"
+            [maxHp]="poke.card.hp"
+            [damageCounters]="poke.damageCounters"
+          />
+          @if (attachedEnergyTypes().length > 0) {
+            <div class="active-card__energies">
+              @for (e of attachedEnergyTypes(); track e) {
+                <span class="active-card__energy-gem" [attr.data-type]="e" [title]="e">{{ e.charAt(0) }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        @if (specialConditions().length > 0) {
+          <div class="active-card__conditions">
+            @for (cond of specialConditions(); track cond) {
+              <app-status-indicator [condition]="cond" />
+            }
+          </div>
+        }
+
+      </div>
+    </div>
+  } @else {
+    <div class="active-slot__placeholder">
+      <span class="active-slot__placeholder-text">Activo</span>
+    </div>
+  }
+</div>

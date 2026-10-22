@@ -1,0 +1,234 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.1rem;
+  min-height: 420px;
+  max-height: calc(100vh - var(--appbar-h) - 5rem);
+}
+
+/* ---- Header ---- */
+.editor__header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.editor__name {
+  flex: 1;
+  padding: 0.65rem 0.9rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.editor__name::placeholder { color: var(--text-mute); }
+.editor__name:focus {
+  border-color: var(--accent-bright);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.editor__count {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.editor__count small { font-size: 0.9rem; opacity: 0.6; }
+.editor__count--valid { color: var(--accent-bright); }
+.editor__count--invalid { color: #ffce5a; }
+
+/* ---- Progreso ---- */
+.editor__progress {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+.editor__progress-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent-bright));
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.editor__progress-bar.is-full {
+  background: linear-gradient(90deg, var(--accent-bright), #aef5c1);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* ---- Lista / drop zone ---- */
+.editor__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  flex: 1;
+  padding: 0.4rem;
+  border: 1.5px dashed transparent;
+  border-radius: var(--r-md);
+  transition: border-color 0.2s, background 0.2s;
+}
+.editor__list--empty {
+  border-color: var(--glass-border);
+}
+/* Resaltado cuando se está por soltar una carta */
+.editor__list.cdk-drop-list-receiving,
+.editor__list.cdk-drop-list-dragging {
+  border-color: var(--accent-bright);
+  background: var(--accent-glow);
+}
+
+/* ---- Empty ---- */
+.editor__empty {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-mute);
+  text-align: center;
+}
+.editor__empty p { margin: 0; font-size: 0.95rem; color: var(--text-dim); }
+.editor__empty small { color: var(--text-mute); }
+.editor__empty-icon {
+  color: var(--accent);
+  animation: float-up 1.8s ease-in-out infinite;
+  margin-bottom: 0.4rem;
+}
+
+/* ---- Card item ---- */
+.editor__card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+
+.editor__card-image {
+  width: 40px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.editor__card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.editor__card-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.editor__card-types { font-size: 0.72rem; color: var(--text-mute); }
+
+/* ---- Controles ---- */
+.editor__card-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+.editor__btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--glass-border);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.editor__btn:active:not(:disabled) { transform: scale(0.92); }
+.editor__btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.editor__btn--plus { color: var(--accent-bright); }
+.editor__btn--plus:hover:not(:disabled) { background: var(--accent); color: #fff; }
+.editor__btn--minus { color: #ffce5a; }
+.editor__btn--remove { color: #ff7a7a; margin-left: 0.2rem; }
+.editor__btn--remove:hover:not(:disabled) { background: var(--poke-red); color: #fff; }
+
+.editor__quantity {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  min-width: 1.4rem;
+  text-align: center;
+  color: #fff;
+}
+.editor__quantity.is-max { color: var(--accent-bright); }
+
+/* ---- Acciones ---- */
+.editor__actions {
+  display: flex;
+  gap: 0.7rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--glass-border);
+}
+.editor__save-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 9px;
+  background: linear-gradient(180deg, var(--accent-bright), var(--accent-deep));
+  color: #fff;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px var(--accent-glow);
+  transition: transform 0.18s, box-shadow 0.2s;
+}
+.editor__save-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 22px var(--accent-glow); }
+.editor__save-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.editor__random-btn {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #9b59b6, #f1c40f);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(155, 89, 182, 0.4);
+  transition: transform 0.18s, box-shadow 0.2s;
+}
+.editor__random-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(155, 89, 182, 0.5); }
+.editor__random-btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+
+.editor__clear-btn {
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 122, 122, 0.5);
+  border-radius: 9px;
+  background: transparent;
+  color: #ff7a7a;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.18s;
+}
+.editor__clear-btn:hover:not(:disabled) { background: rgba(238, 21, 21, 0.15); transform: translateY(-1px); }
+.editor__clear-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---- CDK ---- */
+.editor__card.cdk-drag-preview {
+  box-shadow: var(--shadow-lg);
+}
+.editor__card.cdk-drag-placeholder { opacity: 0.3; }
+.cdk-drag-animating { transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1); }

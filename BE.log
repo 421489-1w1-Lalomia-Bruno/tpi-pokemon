@@ -1,0 +1,47 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------< ar.edu.utn.frc.tup.piii:tpi-pokemon >-----------------
+[INFO] Building POKEMON 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.5.1:run (default-cli) > test-compile @ tpi-pokemon >>>
+[INFO] 
+[INFO] --- jacoco:0.8.11:prepare-agent (prepare-agent) @ tpi-pokemon ---
+[INFO] argLine set to -javaagent:C:\\Users\\Usuario\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.11\\org.jacoco.agent-0.8.11-runtime.jar=destfile=D:\\Users\\Usuario\\Desktop\\tpi-pokemon-2w1-12\\BE\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ tpi-pokemon ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Copying 7 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ tpi-pokemon ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ tpi-pokemon ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ tpi-pokemon ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] <<< spring-boot:3.5.1:run (default-cli) < test-compile @ tpi-pokemon <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.5.1:run (default-cli) @ tpi-pokemon ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.1)
+
+2026-06-13T22:50:21.458-03:00  WARN 18448 --- [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-13T22:50:21.777-03:00  WARN 18448 --- [  restartedMain] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 53e26d01-1708-40c0-b4ad-2ea8e659275c
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+

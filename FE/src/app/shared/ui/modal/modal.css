@@ -1,0 +1,100 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.75rem, 3vw, 2rem);
+  background: rgba(5, 5, 8, 0.72);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  animation: fade-in var(--transition-base) both;
+}
+
+.modal-sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  background:
+    radial-gradient(700px 300px at 0% 0%, rgba(238, 21, 21, 0.14), transparent 60%),
+    var(--glass-bg-strong);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  animation: slide-in-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.modal-sheet[data-size='sm'] { width: min(400px, 92vw); }
+.modal-sheet[data-size='md'] { width: min(560px, 92vw); }
+.modal-sheet[data-size='lg'] { width: min(800px, 94vw); }
+.modal-sheet[data-size='fullscreen'] {
+  width: 96vw;
+  height: 96vh;
+  max-height: 96vh;
+  border-radius: var(--r-lg);
+}
+
+/* ─── Header ─── */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.5rem 0;
+  flex-shrink: 0;
+}
+
+.modal-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  color: #fff;
+  font-weight: var(--fw-bold);
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: var(--text-dim);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  padding: 0;
+  transition: transform var(--transition-spring), background var(--transition-fast), color var(--transition-fast);
+}
+
+.modal-close:hover {
+  transform: rotate(90deg);
+  background: var(--poke-red);
+  color: #fff;
+}
+
+.modal-close:focus-visible {
+  outline: 2px solid var(--poke-red-bright);
+  outline-offset: 2px;
+}
+
+/* ─── Body ─── */
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ─── Footer ─── */
+.modal-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.5rem 1.5rem;
+  flex-shrink: 0;
+
+  
+}

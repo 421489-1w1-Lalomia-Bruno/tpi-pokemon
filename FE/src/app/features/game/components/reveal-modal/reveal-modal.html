@@ -1,0 +1,59 @@
+<div class="reveal-overlay">
+  <div class="reveal-modal">
+    @if (faceDown()) {
+      <h2 class="reveal-modal__title">Elige una carta del rival</h2>
+      <p class="reveal-modal__body">Selecciona una carta de la mano del oponente. La carta elegida será devuelta a su mazo.</p>
+    } @else {
+      <h2 class="reveal-modal__title">Elige un Pokémon</h2>
+      <p class="reveal-modal__body">
+        @if (hasPokemon()) {
+          Selecciona un Pokémon de las cartas reveladas para añadirlo a tu mano.
+        } @else {
+          No hay Pokémon entre las cartas reveladas.
+        }
+      </p>
+    }
+
+    <div class="reveal-modal__cards">
+      @for (card of cards(); track card.id) {
+        <div
+          class="reveal-card"
+          [class.reveal-card--selectable]="faceDown() || card.type === 'POKEMON'"
+          [class.reveal-card--disabled]="!faceDown() && card.type !== 'POKEMON'"
+          (click)="(faceDown() || card.type === 'POKEMON') && onCardClick(card.id)"
+          role="button"
+          [tabindex]="(faceDown() || card.type === 'POKEMON') ? 0 : -1"
+          (keydown.enter)="(faceDown() || card.type === 'POKEMON') && onCardClick(card.id)"
+        >
+          @if (faceDown()) {
+            <app-card [cardModel]="toCardModel(card)" [interactive]="false" />
+          } @else {
+            <img
+              [src]="$any(card).imageUrl || ''"
+              [alt]="card.name"
+              class="reveal-card__image"
+              loading="lazy"
+            />
+            <span class="reveal-card__name">{{ card.name }}</span>
+            <span class="reveal-card__type">{{ card.type }}</span>
+          }
+          @if (faceDown()) {
+            <span class="reveal-card__badge">Elegir</span>
+          } @else if (card.type === 'POKEMON') {
+            <span class="reveal-card__badge">Elegir</span>
+          } @else {
+            <span class="reveal-card__badge reveal-card__badge--disabled">No elegible</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="reveal-modal__actions">
+      @if (!faceDown() && !hasPokemon()) {
+        <button class="reveal-modal__btn reveal-modal__btn--secondary" (click)="onSkip()">
+          No hay Pokémon, continuar
+        </button>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<div class="opponent-area">
+  <div class="opponent-area__header">
+    <h3 class="opponent-area__title">Oponente</h3>
+    <div class="opponent-area__piles">
+      <div class="pile-badge" title="Mano">
+        <span class="pile-badge__count">{{ handCount() }}</span>
+        <span class="pile-badge__label">Mano</span>
+      </div>
+      <div class="pile-badge" title="Mazo">
+        <span class="pile-badge__count">{{ deckCount() }}</span>
+        <span class="pile-badge__label">Mazo</span>
+      </div>
+      <div class="pile-badge" title="Descarte">
+        <span class="pile-badge__count">{{ discardCount() }}</span>
+        <span class="pile-badge__label">Descarte</span>
+      </div>
+      <div class="pile-badge pile-badge--prize" title="Premios">
+        <span class="pile-badge__count">{{ prizeCount() }}</span>
+        <span class="pile-badge__label">Premios</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="opponent-area__pokemon">
+    <div class="opponent-area__active">
+      @if (activePokemon(); as poke) {
+        <div class="opponent-pokemon opponent-pokemon--active">
+          <div class="opponent-pokemon__card-wrapper" [class.card-wrapper--confused]="isActiveConfused()">
+            <app-card [cardModel]="activeCardModel()" [interactive]="false" [energy]="activeEnergyTypes()" (activated)="onActiveCardClick()" />
+            @if (activePokemon()?.tool; as tool) {
+              <div class="tool-overlay" (click)="onActiveToolClick(tool)">
+                <img [src]="tool.imageUrl" alt="{{ tool.name }}" class="tool-overlay__img" />
+              </div>
+            }
+          </div>
+
+          <div class="op-info">
+            <div class="op-name-row">
+              <span class="op-name">{{ poke.card.name }}</span>
+            </div>
+
+            <div class="op-hp-row">
+              <app-damage-counter
+                [currentHp]="poke.currentHp"
+                [maxHp]="poke.card.hp"
+                [damageCounters]="poke.damageCounters"
+              />
+              @if (activeEnergyTypes().length > 0) {
+                <div class="op-energies">
+                  @for (e of activeEnergyTypes(); track e) {
+                    <span class="op-energy-gem" [attr.data-type]="e" [title]="e">{{ e.charAt(0) }}</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="op-badges">
+              @if (poke.specialConditions.length > 0) {
+                <div class="op-conditions">
+                  @for (cond of poke.specialConditions; track cond) {
+                    <app-status-indicator [condition]="cond" />
+                  }
+                </div>
+              }
+            </div>
+
+          </div>
+        </div>
+      } @else {
+        <div class="opponent-pokemon opponent-pokemon--empty">Sin activo</div>
+      }
+    </div>
+
+    <div class="opponent-area__bench">
+      @for (slot of slots(); track $index) {
+        @if (slot) {
+          <div class="opponent-pokemon opponent-pokemon--bench">
+            <app-card [cardModel]="toCardModel(slot)" [compact]="true" [interactive]="false" [energy]="toEnergyTypes(slot)" (activated)="onBenchCardClick(slot)" />
+
+            <div class="op-info">
+              <div class="op-name-row">
+                <span class="op-name">{{ slot.card.name }}</span>
+              </div>
+
+              <div class="op-hp-row">
+                <app-damage-counter
+                  [currentHp]="slot.currentHp"
+                  [maxHp]="slot.card.hp"
+                  [damageCounters]="slot.damageCounters"
+                />
+                @if (toEnergyTypes(slot).length > 0) {
+                  <div class="op-energies">
+                    @for (e of toEnergyTypes(slot); track e) {
+                      <span class="op-energy-gem" [attr.data-type]="e" [title]="e">{{ e.charAt(0) }}</span>
+                    }
+                  </div>
+                }
+              </div>
+
+              @if (slot.specialConditions.length > 0) {
+                <div class="op-conditions">
+                  @for (cond of slot.specialConditions; track cond) {
+                    <app-status-indicator [condition]="cond" />
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="opponent-pokemon opponent-pokemon--empty">Vacío</div>
+        }
+      }
+    </div>
+  </div>
+</div>

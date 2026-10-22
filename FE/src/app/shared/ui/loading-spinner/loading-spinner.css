@@ -1,0 +1,101 @@
+:host {
+  display: block;
+}
+
+/* ─── Pokeball spinner ─── */
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.pokeball-spinner {
+  position: relative;
+  animation: spin 1.2s linear infinite;
+}
+
+:host([data-size='sm']) .pokeball-spinner { width: 28px; height: 28px; }
+:host([data-size='md']) .pokeball-spinner { width: 44px; height: 44px; }
+:host([data-size='lg']) .pokeball-spinner { width: 64px; height: 64px; }
+
+.pokeball-spinner__top {
+  position: absolute;
+  inset: 0 0 50% 0;
+  border-radius: 999px 999px 0 0;
+  background: var(--poke-red);
+  border: 2px solid #1a1a1a;
+  border-bottom: none;
+  overflow: hidden;
+}
+
+.pokeball-spinner__bottom {
+  position: absolute;
+  inset: 50% 0 0 0;
+  border-radius: 0 0 999px 999px;
+  background: #f4f4f6;
+  border: 2px solid #1a1a1a;
+  border-top: none;
+}
+
+.pokeball-spinner__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #1a1a1a;
+}
+
+.pokeball-spinner__center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #1a1a1a;
+  box-shadow: 0 0 0 2px #1a1a1a;
+}
+
+:host([data-size='sm']) .pokeball-spinner__top,
+:host([data-size='sm']) .pokeball-spinner__bottom,
+:host([data-size='sm']) .pokeball-spinner__ring,
+:host([data-size='sm']) .pokeball-spinner__center {
+  border-width: 1.5px;
+}
+
+.spinner-text {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  animation: fade-in var(--transition-slow) both;
+}
+
+/* ─── Skeleton ─── */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.skeleton__line {
+  height: 14px;
+  border-radius: var(--r-full);
+  background: linear-gradient(
+    90deg,
+    var(--glass-bg) 0%,
+    var(--glass-bg-strong) 40%,
+    var(--glass-bg) 80%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+.skeleton__line--short { width: 50%; }
+.skeleton__line--mid { width: 75%; }
+
+:host([data-size='sm']) .skeleton__line { height: 10px; }
+:host([data-size='lg']) .skeleton__line { height: 18px; }

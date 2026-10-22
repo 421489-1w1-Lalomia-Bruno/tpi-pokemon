@@ -1,0 +1,34 @@
+<div
+  cdkDropList
+  id="handZone"
+  [cdkDropListData]="cards()"
+  [cdkDropListSortingDisabled]="true"
+  class="hand-area"
+  [class.hand-area--active]="canDrag()"
+  (cdkDropListDropped)="cardDropped.emit($event)"
+>
+  @for (card of cards(); track card.id) {
+    <div
+      cdkDrag
+      [cdkDragData]="card"
+      [cdkDragDisabled]="!canDrag() || !cardDraggable(card)"
+      class="hand-card"
+      [class.hand-card--disabled]="!canDrag() || !cardDraggable(card)"
+      [class.hand-card--playable]="canDrag() && cardDraggable(card)"
+      (cdkDragStarted)="onDragStarted()"
+      (cdkDragEnded)="onDragEnded()"
+    >
+      <app-card
+        [cardModel]="toCardModel(card)"
+        [compact]="true"
+        [interactive]="false"
+        (activated)="onCardClick(card)"
+      />
+      <ng-template cdkDragPlaceholder>
+        <div class="hand-card__placeholder"></div>
+      </ng-template>
+    </div>
+  } @empty {
+    <span class="hand-area__empty">Sin cartas</span>
+  }
+</div>

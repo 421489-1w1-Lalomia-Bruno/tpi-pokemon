@@ -1,0 +1,105 @@
+:host {
+  --accent: var(--poke-red);
+  --accent-bright: var(--poke-red-bright);
+  --accent-deep: var(--poke-red-deep);
+  --accent-glow: rgba(238, 21, 21, 0.45);
+}
+
+.register__card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem 2rem;
+}
+
+.register__hero {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.register__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.02em;
+  margin: 0;
+  background: linear-gradient(135deg, var(--text) 20%, var(--accent-bright));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.register__subtitle {
+  margin: 0.4rem 0 0;
+  color: var(--text-dim);
+  font-size: 0.92rem;
+}
+
+.register__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.register__error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  background: rgba(238, 21, 21, 0.1);
+  border: 1px solid rgba(238, 21, 21, 0.3);
+  border-radius: var(--r-sm);
+  color: #ffb4b4;
+  font-size: 0.88rem;
+}
+
+.register__error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: var(--poke-red);
+  color: #fff;
+  font-weight: var(--fw-bold);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.register__select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23a8a8b3' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.register__select option {
+  background: var(--ink-800);
+  color: var(--text);
+}
+
+.register__submit {
+  margin-top: 0.5rem;
+  width: 100%;
+  display: block;
+}
+
+.register__footer {
+  text-align: center;
+  margin: 1.5rem 0 0;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.register__link {
+  color: var(--accent-bright);
+  text-decoration: none;
+  font-weight: var(--fw-semibold);
+  transition: color var(--transition-fast);
+}
+.register__link:hover {
+  color: #fff;
+  text-decoration: underline;
+}

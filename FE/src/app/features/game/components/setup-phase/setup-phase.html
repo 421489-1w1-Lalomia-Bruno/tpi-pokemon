@@ -1,0 +1,116 @@
+<div class="setup-overlay">
+  @if (isWaitingPhase()) {
+    <div class="setup-content">
+      <h1>Preparando Partida</h1>
+      <p class="match-id">Sala: {{ matchId() }}</p>
+      <p class="player-id">Jugador: {{ username() }}</p>
+      @if (!opponentId()) {
+        <app-loading-spinner size="lg" text="Esperando que se una un rival…" />
+      } @else {
+        <p class="sub-text">Ambos jugadores conectados. ¡Preparate para jugar!</p>
+      }
+      @if (hasClickedReady()) {
+        <div class="ready-confirmed">
+          <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+          <span>Listo. Esperando al rival…</span>
+        </div>
+      } @else {
+        <app-button variant="primary" size="lg" [loading]="isProcessing()" [disabled]="isProcessing()" (click)="onReady()">READY</app-button>
+      }
+    </div>
+  }
+
+  @else if (isSetupPhase()) {
+    <div class="setup-content setup-content--wide">
+      <h2>Colocá tus Pokémon Básicos</h2>
+      <p class="match-id">Sala: {{ matchId() }}</p>
+      <p class="sub-text">Seleccioná una carta de tu mano y elegí dónde colocarla.</p>
+
+      @if (hand().length > 0) {
+        <div class="hand-list">
+          @for (card of hand(); track card.id) {
+            @if (card.type === 'POKEMON' && ($any(card).stage === 'BASIC' || $any(card).stage === 'EX')) {
+              <button
+                class="hand-card"
+                [class.selected]="selectedCardId() === card.id"
+                (click)="onSelectCard(card.id)"
+                type="button"
+                [attr.aria-label]="'Seleccionar ' + card.name"
+              >
+                @if ($any(card).imageUrl) {
+                  <img class="hand-card__img" [src]="$any(card).imageUrl" [alt]="card.name" loading="lazy" />
+                } @else {
+                  <span class="hand-card__hp">{{ $any(card).hp }} HP</span>
+                  <span class="hand-card__stage">{{ $any(card).stage }}</span>
+                }
+                <span class="hand-card__name">{{ card.name }}</span>
+              </button>
+            } @else {
+              <span class="hand-card hand-card--disabled" [attr.aria-label]="card.name + ' (no se puede colocar)'">
+                @if ($any(card).imageUrl) {
+                  <img class="hand-card__img" [src]="$any(card).imageUrl" [alt]="card.name" loading="lazy" />
+                } @else {
+                  <span class="hand-card__type">{{ card.type === 'ENERGY' ? 'Energía' : card.type === 'TRAINER' ? 'Trainer' : $any(card).stage }}</span>
+                }
+                <span class="hand-card__name">{{ card.name }}</span>
+              </span>
+            }
+          }
+        </div>
+      }
+
+      @if (selectedCardId()) {
+        <div class="placement-actions">
+          <app-button variant="primary" [loading]="isProcessing()" [disabled]="isProcessing()" (click)="onPlacePokemon('ACTIVE')">
+            Colocar en Activo
+          </app-button>
+          <app-button variant="secondary" [loading]="isProcessing()" [disabled]="isProcessing()" (click)="onPlacePokemon('BENCH')">
+            Colocar en Banca
+          </app-button>
+        </div>
+      }
+
+      <div class="zone-grid">
+        <div class="zone-slot zone-slot--active" [class.zone-slot--occupied]="!!myActive()">
+          @if (myActive(); as active) {
+            <div class="zone-card">
+              @if (active.card.imageUrl) {
+                <img class="zone-card__img" [src]="active.card.imageUrl" [alt]="active.card.name" loading="lazy" />
+              }
+              <span class="zone-card__name">{{ active.card.name }}</span>
+              <span class="zone-card__hp">{{ active.currentHp }} HP</span>
+            </div>
+          } @else {
+            <span class="zone-slot__label">Activo</span>
+          }
+        </div>
+
+        @for (slot of benchSlots(); track $index) {
+          <div class="zone-slot" [class.zone-slot--occupied]="!!slot">
+            @if (slot) {
+              <div class="zone-card">
+                @if (slot.card.imageUrl) {
+                  <img class="zone-card__img" [src]="slot.card.imageUrl" [alt]="slot.card.name" loading="lazy" />
+                }
+                <span class="zone-card__name">{{ slot.card.name }}</span>
+                <span class="zone-card__hp">{{ slot.currentHp }} HP</span>
+              </div>
+            } @else {
+              <span class="zone-slot__label">Banca {{ $index + 1 }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      @if (myActive()) {
+        <div class="confirm-row">
+          <app-button variant="primary" size="lg" [loading]="hasConfirmed()" [disabled]="hasConfirmed()" (click)="onConfirmSetup()">
+            Listo
+          </app-button>
+        </div>
+      }
+    </div>
+  }
+</div>

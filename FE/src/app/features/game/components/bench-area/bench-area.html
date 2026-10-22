@@ -1,0 +1,71 @@
+<div
+  class="bench-area"
+  [class.bench-area--active]="isMyTurn() && phase() === 'ACTIONS'"
+>
+  @for (slot of slots(); track $index) {
+    <div
+      cdkDropList
+      [id]="'benchSlot-' + $index"
+      [cdkDropListData]="slot"
+      class="bench-slot"
+      [class.bench-slot--filled]="!!slot"
+      [class.bench-slot--empty]="!slot"
+      (cdkDropListDropped)="cardDropped.emit($event)"
+    >
+      @if (slot) {
+        <div class="bench-card">
+          <app-card
+            [cardModel]="toCardModel(slot)"
+            [compact]="true"
+            [interactive]="false"
+            [energy]="toEnergyTypes(slot)"
+            (activated)="onCardClick(slot)"
+          />
+
+          <div class="bench-card__info">
+            <div class="bench-card__name-row">
+              <span class="bench-card__name">{{ slot.card.name }}</span>
+            </div>
+
+            <div class="bench-card__hp-row">
+              <app-damage-counter
+                [currentHp]="slot.currentHp"
+                [maxHp]="slot.card.hp"
+                [damageCounters]="slot.damageCounters"
+              />
+              @if (toEnergyTypes(slot).length > 0) {
+                <div class="bench-card__energies">
+                  @for (e of toEnergyTypes(slot); track e) {
+                    <span class="bench-card__energy-gem" [attr.data-type]="e" [title]="e">{{ e.charAt(0) }}</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="bench-card__badges">
+              @if (canEvolve(slot)) {
+                <span class="bench-evolution-badge">Evo</span>
+              }
+
+              @if (slot.specialConditions.length > 0) {
+                <div class="bench-card__conditions">
+                  @for (cond of slot.specialConditions; track cond) {
+                    <app-status-indicator [condition]="cond" />
+                  }
+                </div>
+              }
+            </div>
+
+            @if (slot.tool) {
+              <span class="bench-card__tool">Tool: {{ slot.tool.name }}</span>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="bench-slot__placeholder">
+          <span class="bench-slot__placeholder-text">Banco</span>
+        </div>
+      }
+    </div>
+  }
+</div>

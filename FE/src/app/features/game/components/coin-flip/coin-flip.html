@@ -1,0 +1,18 @@
+@if (visible()) {
+  <div class="coin-flip-overlay">
+    <div class="coin-flip-content">
+      <div class="coin-container">
+        <div class="coin"
+          [class.spin-heads]="!isQuick() && result() === 'heads'"
+          [class.spin-tails]="!isQuick() && result() === 'tails'"
+          [class.spin-quick-heads]="isQuick() && result() === 'heads'"
+          [class.spin-quick-tails]="isQuick() && result() === 'tails'">
+           <div class="face front"><img src="/assets/Pokeball_moneda.jpg" alt="" width="140" height="140"></div>
+           <div class="face back"><img src="/assets/pikachu_moneda.png" alt="" width="140" height="140"></div>
+        </div>
+      </div>
+      <p class="result-message" [class.result-message--quick]="isQuick()">{{ message() }}</p>
+      <div aria-live="polite" class="sr-only">{{ message() || 'Lanzando la moneda...' }}</div>
+    </div>
+  </div>
+}

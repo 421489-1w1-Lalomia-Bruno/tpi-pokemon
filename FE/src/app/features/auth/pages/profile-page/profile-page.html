@@ -1,0 +1,94 @@
+<main class="profile">
+  @if (loading()) {
+    <div class="profile__spinner-container">
+      <app-loading-spinner size="lg" text="Cargando perfil…" />
+    </div>
+  } @else if (error(); as msg) {
+    <div class="profile__error" role="alert">
+      <span class="profile__error-icon" aria-hidden="true">!</span>
+      <p>{{ msg }}</p>
+      <app-button variant="ghost" (click)="loadProfile()">Reintentar</app-button>
+    </div>
+  } @else if (profile(); as p) {
+    <header class="profile__hero">
+      <h1 class="profile__title">Mi perfil</h1>
+    </header>
+
+    <div class="profile__grid">
+      <section class="profile__user-card glass">
+        <div class="profile__avatar" [attr.aria-label]="'Avatar ' + genderLabel()">
+          <span class="profile__avatar-emoji">{{ genderEmoji() }}</span>
+        </div>
+        <h2 class="profile__username">{{ p.username }}</h2>
+        <div class="profile__meta">
+          <span class="chip">{{ genderLabel() }}</span>
+          <span class="profile__date">Miembro desde {{ p.createdAt | date:'longDate':'':'es' }}</span>
+        </div>
+
+        <div class="profile__stats">
+          <div class="profile__stat">
+            <span class="profile__stat-value">{{ gamesPlayed() }}</span>
+            <span class="profile__stat-label">Jugadas</span>
+          </div>
+          <div class="profile__stat">
+            <span class="profile__stat-value profile__stat-value--win">{{ p.wins }}</span>
+            <span class="profile__stat-label">Ganadas</span>
+          </div>
+          <div class="profile__stat">
+            <span class="profile__stat-value profile__stat-value--loss">{{ p.losses }}</span>
+            <span class="profile__stat-label">Perdidas</span>
+          </div>
+          <div class="profile__stat">
+            <span class="profile__stat-value profile__stat-value--rate">{{ winPercentage() }}%</span>
+            <span class="profile__stat-label">Victorias</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="profile__decks glass">
+        <div class="profile__decks-header">
+          <h2 class="profile__decks-title">Mis mazos</h2>
+          <a routerLink="/deck-builder">
+            <app-button variant="primary" size="sm">+ Nuevo mazo</app-button>
+          </a>
+        </div>
+
+        @if (p.decks.length === 0) {
+          <div class="profile__empty">
+            <p>No tenés mazos todavía.</p>
+            <a routerLink="/deck-builder" class="profile__link">¡Creá tu primer mazo!</a>
+          </div>
+        } @else {
+          <ul class="profile__deck-list">
+            @for (deck of p.decks; track deck.id) {
+              <li class="profile__deck-item">
+                <div class="profile__deck-info">
+                  <span class="profile__deck-name">{{ deck.name }}</span>
+                  <span class="profile__deck-meta">
+                    {{ deck.totalCards }} cartas
+                    <span
+                      class="chip"
+                      [class.chip--valid]="deck.isValid"
+                      [class.chip--invalid]="!deck.isValid"
+                    >
+                      {{ deck.isValid ? 'Válido' : 'Inválido' }}
+                    </span>
+                  </span>
+                </div>
+                <button
+                  class="profile__deck-delete"
+                  [disabled]="deletingDeckId() === deck.id"
+                  (click)="deleteDeck(deck.id)"
+                  aria-label="Eliminar mazo {{ deck.name }}"
+                  title="Eliminar mazo"
+                >
+                  {{ deletingDeckId() === deck.id ? '…' : '✕' }}
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+  }
+</main>

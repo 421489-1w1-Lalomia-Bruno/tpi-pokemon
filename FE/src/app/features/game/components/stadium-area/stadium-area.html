@@ -1,0 +1,11 @@
+@if (stadium(); as s) {
+<div class="stadium">
+  <div class="stadium__label">Estadio</div>
+  <div class="stadium__card">
+    <span class="stadium__name">{{ s.name }}</span>
+    @if (s.effect) {
+    <span class="stadium__effect">{{ parseEffect(s.effect) }}</span>
+    }
+  </div>
+</div>
+}

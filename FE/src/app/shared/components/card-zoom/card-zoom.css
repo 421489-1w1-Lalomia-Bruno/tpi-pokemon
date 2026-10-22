@@ -1,0 +1,345 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.75rem, 3vw, 2rem);
+  background: rgba(5, 5, 8, 0.72);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  animation: overlay-in 0.25s ease both;
+}
+@keyframes overlay-in {
+  from { opacity: 0; }
+}
+
+.sheet {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(280px, 1fr);
+  gap: clamp(1rem, 3vw, 2.2rem);
+  width: min(900px, 100%);
+  max-height: 32.5rem;
+  overflow: auto;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background:
+    radial-gradient(700px 300px at 0% 0%, rgba(238, 21, 21, 0.14), transparent 60%),
+    var(--glass-bg-strong);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  animation: sheet-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.94); }
+}
+
+.sheet__close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 5;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.sheet__close:hover {
+  transform: rotate(90deg);
+  background: var(--poke-red);
+  color: #fff;
+}
+.sheet__close:focus-visible { outline: 2px solid var(--poke-red-bright); outline-offset: 2px; }
+
+/* ---- Carta grande ---- */
+.sheet__card {
+  align-self: start;
+  position: sticky;
+  top: 0;
+}
+.sheet__hint {
+  margin: 0.9rem 0 0;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-mute);
+}
+
+/* ---- Panel info ---- */
+.sheet__info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.info__head { padding-right: 2.5rem; }
+.info__name {
+  margin: 0 0 0.6rem;
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+  line-height: 1.05;
+  color: #fff;
+}
+.info__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.chip--rarity {
+  color: #ffd479;
+  border-color: rgba(255, 212, 121, 0.4);
+  background: rgba(255, 212, 121, 0.08);
+}
+
+.chip--special {
+  color: #e94560;
+  border-color: rgba(233, 69, 96, 0.4);
+  background: rgba(233, 69, 96, 0.08);
+}
+
+/* ---- Stats ---- */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.stat {
+  flex: 1 1 auto;
+  min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+}
+.stat__label {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+.stat__value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+}
+.stat__value--hp { color: var(--poke-red-bright); }
+
+/* ---- Energías (costos/tipos) ---- */
+.energies { display: inline-flex; gap: 3px; flex-wrap: wrap; }
+.energy {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.35), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.energy[data-type='FIRE']      { background: var(--type-fire); }
+.energy[data-type='WATER']     { background: var(--type-water); }
+.energy[data-type='GRASS']     { background: var(--type-grass); }
+.energy[data-type='LIGHTNING'] { background: var(--type-lightning); color: #2a2400; }
+.energy[data-type='PSYCHIC']   { background: var(--type-psychic); }
+.energy[data-type='FIGHTING']  { background: var(--type-fighting); }
+.energy[data-type='DARKNESS']  { background: var(--type-darkness); }
+.energy[data-type='METAL']     { background: var(--type-metal); }
+.energy[data-type='FAIRY']     { background: var(--type-fairy); }
+.energy[data-type='DRAGON']    { background: var(--type-dragon); }
+.energy[data-type='COLORLESS'] { background: var(--type-colorless); color: #1a1a1a; }
+
+/* ---- Bloques (ataques / habilidades) ---- */
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.block__title {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--poke-red-bright);
+}
+
+.attack {
+  padding: 0.75rem 0.9rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--poke-red);
+  border-radius: var(--r-sm);
+}
+.attack__head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.attack__name {
+  flex: 1;
+  font-weight: 700;
+  color: #fff;
+}
+.attack__damage {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--poke-red-bright);
+}
+.attack__text,
+.ability__text,
+.trainer-effect {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+.ability {
+  padding: 0.75rem 0.9rem;
+  background: rgba(155, 63, 181, 0.1);
+  border: 1px solid rgba(155, 63, 181, 0.3);
+  border-radius: var(--r-sm);
+}
+.ability__tag {
+  display: inline-block;
+  margin-right: 0.5rem;
+  padding: 1px 8px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #9b3fb5;
+  border-radius: 999px;
+}
+.ability__name { font-weight: 700; color: #fff; }
+
+/* ---- Debilidad / Resistencia ---- */
+.weakres {
+  flex-direction: row;
+  gap: 0.6rem;
+}
+.weakres__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+}
+.weakres__label {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+.weakres__value { font-weight: 700; }
+.weakres__value.weak { color: #ff8a6b; }
+.weakres__value.res { color: #9fe0ff; }
+
+/* ---- Footer ---- */
+.info__foot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--glass-border);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text-mute);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 680px) {
+  .sheet {
+    grid-template-columns: 1fr;
+  }
+  .sheet__card {
+    position: static;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+}
+
+/* ---- Attached cards (energies & tool) ---- */
+.attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+}
+
+.attachments__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.attachments__label {
+  font-size: 0.65rem;
+  font-weight: var(--fw-semibold);
+  color: var(--text-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.attachments__gems {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.attachments__tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.5rem 0.65rem;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+}
+
+.attachments__tool-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.attachments__tool-name {
+  font-weight: var(--fw-bold);
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.attachments__tool-subtype {
+  font-size: 0.6rem;
+  font-weight: var(--fw-semibold);
+  color: var(--color-warning);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.attachments__tool-effect {
+  margin: 0.15rem 0 0;
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  line-height: 1.35;
+}

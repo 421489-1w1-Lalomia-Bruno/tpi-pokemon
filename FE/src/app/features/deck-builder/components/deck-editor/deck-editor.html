@@ -1,0 +1,105 @@
+<div class="editor glass">{{ this.diag() }}
+  <div class="editor__header">
+    <input
+      type="text"
+      class="editor__name"
+      placeholder="Nombre del mazo"
+      [ngModel]="deckName()"
+      (ngModelChange)="deckName.set($event)"
+      [disabled]="saving()"
+      aria-label="Nombre del mazo"
+    />
+    <span
+      class="editor__count"
+      [class.editor__count--valid]="totalCards() === 60"
+      [class.editor__count--invalid]="totalCards() !== 60"
+    >
+      {{ totalCards() }}<small>/60</small>
+    </span>
+  </div>
+
+  <!-- Barra de progreso hacia 60 -->
+  <div class="editor__progress" [attr.aria-valuenow]="totalCards()" aria-valuemin="0" aria-valuemax="60" role="progressbar">
+    <div class="editor__progress-bar" [class.is-full]="totalCards() === 60" [style.width.%]="progress()"></div>
+  </div>
+
+  <!-- Zona de drop (siempre presente) -->
+  <div
+    class="editor__list"
+    [class.editor__list--empty]="cards().length === 0"
+    cdkDropList
+    id="deck-drop-list"
+    [cdkDropListData]="cards()"
+    (cdkDropListDropped)="onDrop($event)"
+  >
+    @for (item of cards(); track item.card.id) {
+      <div class="editor__card" cdkDrag [cdkDragData]="item.card">
+        <img class="editor__card-image" [src]="item.card.imageUrl" [alt]="item.card.name" loading="lazy" />
+        <div class="editor__card-info">
+          <span class="editor__card-name">{{ item.card.name }}</span>
+          <span class="editor__card-types">{{ item.card.supertype }}</span>
+        </div>
+        <div class="editor__card-controls">
+          <button
+            class="editor__btn editor__btn--minus"
+            (click)="decrementCard.emit(item.card.id)"
+            [disabled]="item.quantity <= 1 || saving()"
+            aria-label="Quitar una copia de {{ item.card.name }}"
+          >−</button>
+          <span class="editor__quantity" [class.is-max]="item.quantity >= 4">{{ item.quantity }}</span>
+          <button
+            class="editor__btn editor__btn--plus"
+            (click)="incrementCard.emit(item.card.id)"
+            [disabled]="maxedCardIds().has(item.card.id) || maxCardsReached() || saving()"
+            aria-label="Agregar una copia de {{ item.card.name }}"
+          >+</button>
+          <button
+            class="editor__btn editor__btn--remove"
+            (click)="removeCard.emit(item.card.id)"
+            [disabled]="saving()"
+            aria-label="Eliminar {{ item.card.name }} del mazo"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+              <path d="M18 6L6 18"/><path d="M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    } @empty {
+      <div class="editor__empty">
+        <svg class="editor__empty-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" aria-hidden="true">
+          <path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/>
+        </svg>
+        <p>Arrastrá cartas acá<br /><small>o tocá el botón <strong>+</strong> del catálogo</small></p>
+      </div>
+    }
+  </div>
+
+  <div class="editor__actions">
+    <button
+      class="editor__random-btn"
+      (click)="fillRandom.emit()"
+      [disabled]="maxCardsReached() || saving()"
+    >
+      Al Azar
+    </button>
+    @if (cards().length > 0) {
+      <button
+        class="editor__save-btn"
+        (click)="save.emit()"
+        [disabled]="saving() || deckName().trim().length === 0 || totalCards() !== 60"
+      >
+        {{ saving() ? 'Guardando…' : 'Guardar mazo' }}
+      </button>
+    }
+    @if (cards().length > 0) {
+      <button
+        class="editor__clear-btn"
+        (click)="clearAll.emit()"
+        [disabled]="saving()"
+      >
+        Borrar todo
+      </button>
+    }
+  </div>
+</div>

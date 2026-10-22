@@ -1,0 +1,15 @@
+<div class="stack" [attr.title]="label() + ': ' + count()">
+  <div class="stack__cards">
+    @for (i of [1, 2, 3]; track i) {
+      @if (count() >= i) {
+        <span class="stack__card" aria-hidden="true"></span>
+      }
+    }
+  </div>
+  <div class="stack__info">
+    <span class="stack__count">{{ count() }}</span>
+    @if (label()) {
+      <span class="stack__label">{{ label() }}</span>
+    }
+  </div>
+</div>

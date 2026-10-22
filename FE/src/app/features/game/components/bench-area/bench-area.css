@@ -1,0 +1,147 @@
+.bench-area {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.bench-slot {
+  flex: 1;
+  width: 9rem;
+  border-radius: var(--r-sm);
+  border: 2px dashed rgba(120, 200, 255, 0.12);
+  transition: border-color var(--transition-base), background var(--transition-base), box-shadow var(--transition-base);
+}
+
+.bench-slot.cdk-drop-list-receiving {
+  border-color: var(--poke-cyan);
+  border-style: solid;
+  background: rgba(34, 211, 238, 0.1);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.35);
+}
+
+.bench-slot--filled {
+  border-style: solid;
+  border-color: rgba(120, 200, 255, 0.18);
+  background: linear-gradient(180deg, rgba(34, 211, 238, 0.04), transparent);
+}
+
+.bench-slot--empty {
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bench-slot__placeholder-text {
+  font-size: 0.55rem;
+  font-weight: var(--fw-semibold);
+  color: var(--text-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ─── Card info panel ─── */
+.bench-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.2rem 0.3rem 0.15rem;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+  border-radius: 0 0 var(--r-xs) var(--r-xs);
+}
+
+.bench-card__name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem;
+}
+
+.bench-card__name {
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: 0.65rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.bench-card__hp-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.bench-card__energies {
+  display: flex;
+  gap: 0.18rem;
+  flex-wrap: wrap;
+}
+
+.bench-card__energy-gem {
+  display: inline-grid;
+  place-items: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  font-size: 0.48rem;
+  font-weight: var(--fw-bold);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.bench-card__energy-gem[data-type="FIRE"]      { background: var(--type-fire); }
+.bench-card__energy-gem[data-type="WATER"]     { background: var(--type-water); }
+.bench-card__energy-gem[data-type="GRASS"]     { background: var(--type-grass); }
+.bench-card__energy-gem[data-type="LIGHTNING"] { background: var(--type-lightning); color: #2a2400; }
+.bench-card__energy-gem[data-type="PSYCHIC"]   { background: var(--type-psychic); }
+.bench-card__energy-gem[data-type="FIGHTING"]  { background: var(--type-fighting); }
+.bench-card__energy-gem[data-type="DARKNESS"]  { background: var(--type-darkness); }
+.bench-card__energy-gem[data-type="METAL"]     { background: var(--type-metal); }
+.bench-card__energy-gem[data-type="FAIRY"]     { background: var(--type-fairy); }
+.bench-card__energy-gem[data-type="DRAGON"]    { background: var(--type-dragon); }
+.bench-card__energy-gem[data-type="COLORLESS"] { background: var(--type-colorless); color: #1a1a1a; }
+
+.bench-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.bench-card__conditions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem;
+}
+
+.bench-card__tool {
+  font-size: 0.45rem;
+  font-weight: var(--fw-semibold);
+  color: var(--color-warning);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bench-evolution-badge {
+  font-size: 0.45rem;
+  font-weight: var(--fw-bold);
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: var(--r-full);
+  padding: 0.05rem 0.3rem;
+  animation: bench-evo-glow 1.6s ease-in-out infinite;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@keyframes bench-evo-glow {
+  0%, 100% { box-shadow: 0 0 2px rgba(167, 139, 250, 0.2); }
+  50%      { box-shadow: 0 0 8px rgba(167, 139, 250, 0.5); }
+}

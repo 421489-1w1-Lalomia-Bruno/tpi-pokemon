@@ -1,0 +1,19 @@
+<div class="dc" [attr.title]="currentHp() + ' / ' + maxHp() + ' HP'">
+  <div class="dc__bar">
+    <div class="dc__bar-track">
+      <div class="dc__bar-fill" [style.width.%]="healthPercent()"></div>
+      <div class="dc__bar-damage"></div>
+    </div>
+  </div>
+  <div class="dc__text">
+    <span class="dc__hp" [class.dc__hp--flash]="damaged()">{{ currentHp() }}</span>
+    <span class="dc__sep">/</span>
+    <span class="dc__max">{{ maxHp() }}</span>
+    @if (damageCounters() > 0) {
+      <span class="dc__damage">-{{ damageAmount }}</span>
+    }
+  </div>
+  @if (damaged()) {
+    <div class="dc__hit"></div>
+  }
+</div>

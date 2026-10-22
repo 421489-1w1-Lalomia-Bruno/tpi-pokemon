@@ -1,0 +1,183 @@
+:host {
+  display: inline-flex;
+  isolation: isolate;
+}
+
+.btn-host {
+  appearance: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.4rem;
+  font-family: var(--font-ui);
+  font-weight: var(--fw-semibold);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  color: var(--btn-fg, #fff);
+  background: var(--btn-bg, var(--glass-bg-strong));
+  border: 1px solid var(--btn-border, var(--glass-border));
+  border-radius: 9px;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-spring),
+    box-shadow var(--transition-base), background var(--transition-base),
+    border-color var(--transition-base), opacity var(--transition-fast);
+  isolation: isolate;
+  width: 100%;
+}
+
+.btn-host::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s ease;
+  z-index: -1;
+}
+
+.btn-host:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-host:not(:disabled):hover::after {
+  transform: translateX(120%);
+}
+
+.btn-host:not(:disabled):active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-host:focus-visible {
+  outline: 2px solid var(--poke-red-bright);
+  outline-offset: 2px;
+}
+
+.btn-host:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── Variants ─── */
+:host([data-variant='primary']) .btn-host {
+  --btn-bg: linear-gradient(180deg, var(--accent-bright, var(--poke-red-bright)), var(--accent-deep, var(--poke-red-deep)));
+  --btn-fg: #fff;
+  --btn-border: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 24px var(--accent-glow, var(--glow-red)), var(--shadow-sm);
+}
+
+:host([data-variant='primary']) .btn-host:not(:disabled):hover {
+  box-shadow: 0 0 32px var(--accent-glow, var(--glow-red)), var(--shadow-md);
+}
+
+:host([data-variant='primary'][data-loading]) .btn-host {
+  --btn-bg: linear-gradient(180deg, #555, #3a3a3a);
+  --btn-fg: #999;
+  --btn-border: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+:host([data-variant='secondary']) .btn-host {
+  --btn-bg: var(--glass-bg-strong);
+  --btn-fg: var(--text);
+  --btn-border: var(--glass-border-strong);
+}
+
+:host([data-variant='ghost']) .btn-host {
+  --btn-bg: transparent;
+  --btn-fg: var(--text-dim);
+  --btn-border: var(--glass-border);
+}
+
+:host([data-variant='danger']) .btn-host {
+  --btn-bg: linear-gradient(180deg, #f87171, #dc2626);
+  --btn-fg: #fff;
+  --btn-border: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 16px rgba(248, 113, 113, 0.3), var(--shadow-sm);
+}
+
+/* ─── Action variants ─── */
+:host([data-variant='action-attack']) .btn-host {
+  --btn-bg: linear-gradient(135deg, var(--action-attack), #c23152);
+  --btn-fg: #fff;
+  --btn-border: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 16px rgba(233, 69, 96, 0.35), var(--shadow-sm);
+}
+
+:host([data-variant='action-evolve']) .btn-host {
+  --btn-bg: linear-gradient(135deg, var(--action-evolve), #5a1ec8);
+  --btn-fg: #fff;
+  --btn-border: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 16px rgba(123, 47, 247, 0.35), var(--shadow-sm);
+}
+
+:host([data-variant='action-retreat']) .btn-host {
+  --btn-bg: linear-gradient(135deg, var(--action-retreat), #2563a8);
+  --btn-fg: #fff;
+  --btn-border: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 16px rgba(58, 143, 212, 0.35), var(--shadow-sm);
+}
+
+:host([data-variant='action-energy']) .btn-host {
+  --btn-bg: linear-gradient(135deg, var(--action-energy), #c7942a);
+  --btn-fg: #1a1a1a;
+  --btn-border: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 16px rgba(233, 185, 62, 0.35), var(--shadow-sm);
+}
+
+/* ─── Pass action ─── */
+:host([data-variant='action-pass']) .btn-host {
+  --btn-bg: linear-gradient(135deg, var(--color-success), #15803d);
+  --btn-fg: #0a1a0f;
+  --btn-border: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 16px rgba(74, 222, 128, 0.35), var(--shadow-sm);
+}
+
+/* ─── Trainer action ─── */
+:host([data-variant='action-trainer']) .btn-host {
+  --btn-bg: linear-gradient(135deg, var(--action-trainer), #b8860b);
+  --btn-fg: #1a1a1a;
+  --btn-border: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 16px rgba(255, 212, 121, 0.35), var(--shadow-sm);
+}
+
+/* ─── Ability action ─── */
+:host([data-variant='action-ability']) .btn-host {
+  --btn-bg: linear-gradient(135deg, var(--action-ability), #6b2fa0);
+  --btn-fg: #fff;
+  --btn-border: rgba(155, 63, 181, 0.5);
+  box-shadow: 0 0 16px rgba(155, 63, 181, 0.4), var(--shadow-sm);
+}
+
+/* ─── Sizes ─── */
+:host([data-size='sm']) .btn-host {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  gap: 0.4rem;
+}
+
+:host([data-size='lg']) .btn-host {
+  padding: 0.9rem 2rem;
+  font-size: 1.05rem;
+  gap: 0.65rem;
+}
+
+/* ─── Loading spinner ─── */
+.btn-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+.btn-label--hidden {
+  opacity: 0.6;
+}

@@ -1,0 +1,60 @@
+<main class="page-centered">
+  <section class="login__card glass">
+    <div class="login__hero">
+      <h1 class="login__title">Iniciar sesión</h1>
+      <p class="login__subtitle">Ingresá a tu cuenta para jugar</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login__form" novalidate>
+      @if (errorMessage(); as msg) {
+        <div class="login__error" role="alert">
+          <span class="login__error-icon" aria-hidden="true">!</span>
+          {{ msg }}
+        </div>
+      }
+
+      <label class="form-label">
+        <span>Usuario</span>
+        <input
+          type="text"
+          formControlName="username"
+          id="login-username"
+          class="form-input"
+          placeholder="Tu nombre de usuario"
+          autocomplete="username"
+          aria-label="Nombre de usuario"
+          aria-describedby="login-username-error"
+          [class.form-input--error]="loginForm.get('username')?.touched && loginForm.get('username')?.invalid"
+        />
+        @if (loginForm.get('username')?.touched && loginForm.get('username')?.hasError('required')) {
+          <span id="login-username-error" class="form-error" role="alert">El usuario es obligatorio</span>
+        }
+      </label>
+
+      <label class="form-label">
+        <span>Contraseña</span>
+        <input
+          type="password"
+          formControlName="password"
+          class="form-input"
+          placeholder="Tu contraseña"
+          autocomplete="current-password"
+          aria-label="Contraseña"
+          aria-describedby="login-password-error"
+          [class.form-input--error]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+        />
+        @if (loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')) {
+          <span id="login-password-error" class="form-error" role="alert">La contraseña es obligatoria</span>
+        }
+      </label>
+
+      <app-button type="submit" variant="primary" size="lg" [disabled]="loading()" [loading]="loading()" class="login__submit">
+        {{ loading() ? 'Ingresando…' : 'Ingresar' }}
+      </app-button>
+    </form>
+
+    <p class="login__footer">
+      ¿No tenés cuenta? <a routerLink="/register" class="login__link">Registrate</a>
+    </p>
+  </section>
+</main>

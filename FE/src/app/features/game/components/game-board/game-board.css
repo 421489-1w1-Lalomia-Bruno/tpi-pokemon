@@ -1,0 +1,175 @@
+/* =========================================================================
+   TABLERO · Playmat futurista
+   Zona rival (rojo) · línea de batalla neón · zona jugador (cyan)
+   ========================================================================= */
+
+.game-board {
+  display: flex;
+  flex-direction: column;
+  height: 75rem;
+  position: relative;
+  z-index: 2;
+  outline: none;
+}
+
+/* ─── Zona rival (arriba, compacta) ─── */
+.game-board__opponent {
+  flex: 0 0 auto;
+  padding: 0.6rem 0.9rem 0.5rem;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 60, 60, 0.10), rgba(255, 60, 60, 0.02) 60%, transparent);
+  border-bottom: 1px solid rgba(255, 77, 77, 0.18);
+}
+.game-board__opponent::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--arena-opponent-soft) 30%, var(--arena-opponent-soft) 70%, transparent);
+  box-shadow: 0 0 16px rgba(255, 77, 77, 0.45);
+}
+
+/* ─── Battle line · divisor de energía neón ─── */
+.game-board__battle-line {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 1rem;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 77, 77, 0.06), rgba(10, 16, 30, 0.55) 45%, rgba(34, 211, 238, 0.06));
+  transition: box-shadow 0.6s ease, background 0.6s ease;
+}
+
+/* riel luminoso central */
+.game-board__battle-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 4%,
+    rgba(255, 77, 77, 0.5) 22%,
+    rgba(160, 210, 255, 0.65) 50%,
+    rgba(34, 211, 238, 0.5) 78%,
+    transparent 96%);
+  box-shadow: 0 0 18px rgba(120, 200, 255, 0.4);
+}
+
+/* flujo de energía animado sobre el riel */
+.game-board__battle-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+  background-size: 32% 100%;
+  background-repeat: no-repeat;
+  opacity: 0.55;
+  animation: battle-flow 3.6s linear infinite;
+}
+
+@keyframes battle-flow {
+  0%   { background-position: -40% 0; }
+  100% { background-position: 140% 0; }
+}
+
+.game-board__battle-line--active {
+  background:
+    linear-gradient(180deg, rgba(255, 77, 77, 0.05), rgba(10, 16, 30, 0.5) 45%, rgba(34, 211, 238, 0.12));
+  box-shadow: inset 0 -20px 40px -20px rgba(34, 211, 238, 0.25);
+}
+
+.game-board__battle-line-left,
+.game-board__battle-line-right {
+  flex: 1;
+}
+
+/* ─── Zona jugador (abajo, expansiva) ─── */
+.game-board__player {
+  flex: 1 1 0;
+  min-height: 0;
+  padding: 0.6rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background:
+    linear-gradient(0deg, rgba(34, 211, 238, 0.07), rgba(34, 211, 238, 0.015) 55%, transparent);
+  transition: box-shadow 0.6s ease;
+}
+
+.game-board__player--active {
+  box-shadow: inset 0 -8px 50px -10px rgba(34, 211, 238, 0.16);
+}
+.game-board__player--active::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--arena-player-soft) 30%, var(--arena-player-soft) 70%, transparent);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.5);
+}
+
+/* ─── Confirmación de rendición ─── */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 14, 0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fade-in 0.15s ease both;
+}
+
+.confirm-modal {
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(248, 113, 113, 0.12), transparent 60%),
+    linear-gradient(160deg, var(--ink-800), var(--ink-900));
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: var(--r-lg);
+  padding: 2rem;
+  min-width: 300px;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(248, 113, 113, 0.2), var(--shadow-lg);
+  animation: slide-in-up 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.confirm-modal__icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: rgba(248, 113, 113, 0.85);
+  filter: drop-shadow(0 0 10px rgba(248, 113, 113, 0.5));
+}
+
+.confirm-modal__title {
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: var(--fw-bold);
+  margin: 0 0 0.75rem;
+}
+
+.confirm-modal__body {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 1.5rem;
+}
+
+.confirm-modal__actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}

@@ -1,0 +1,83 @@
+<div class="dialog-overlay" (click)="onCancel()">
+  <div class="dialog-container glass" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Crear nueva partida">
+    <button class="dialog-close" type="button" (click)="onCancel()" aria-label="Cerrar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+        <path d="M18 6L6 18"/><path d="M6 6l12 12"/>
+      </svg>
+    </button>
+    <div class="dialog-header">
+      <h2 class="dialog-title">Nueva Partida</h2>
+      <p class="dialog-subtitle">Seleccioná un mazo para comenzar</p>
+    </div>
+
+    <div class="dialog-body">
+      @if (successful()) {
+        <div class="success-state" role="status" aria-live="polite">
+          <svg class="success-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+          <p class="success-text">Partida creada exitosamente</p>
+          <p class="success-subtext">Redirigiendo…</p>
+        </div>
+      } @else if (loading()) {
+        <div class="loading-state" role="status" aria-live="polite">
+          <app-loading-spinner size="md" text="Cargando tus mazos…" />
+        </div>
+      } @else if (error() && decks().length === 0) {
+        <div class="error-state" role="alert">
+          <p>{{ error() }}</p>
+          <app-button variant="primary" size="sm" (click)="loadDecks()">Reintentar</app-button>
+        </div>
+      } @else if (decks().length === 0) {
+        <div class="empty-state">
+          <p class="empty-title">No tenés mazos válidos</p>
+          <p class="empty-text">Necesitás al menos un mazo de 60 cartas válido para crear una partida.</p>
+          <a routerLink="/deck-builder">
+            <app-button variant="primary" size="sm">Ir al constructor de mazos</app-button>
+          </a>
+        </div>
+      } @else {
+        <div class="deck-list" role="radiogroup" aria-label="Seleccionar mazo">
+          @for (deck of decks(); track deck.id) {
+            <button
+              class="deck-option"
+              [class.selected]="selectedDeckId() === deck.id"
+              (click)="selectDeck(deck.id)"
+              type="button"
+              role="radio"
+              [attr.aria-checked]="selectedDeckId() === deck.id"
+              [attr.aria-label]="'Seleccionar mazo ' + deck.name"
+            >
+              <span class="deck-info">
+                <span class="deck-name">{{ deck.name }}</span>
+                <span class="deck-meta">{{ deck.totalCards }} cartas</span>
+              </span>
+              @if (selectedDeckId() === deck.id) {
+                <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
+                  <path d="M20 6L9 17l-5-5"/>
+                </svg>
+              }
+            </button>
+          }
+        </div>
+
+        @if (error()) {
+          <div class="error-message" role="alert">
+            {{ error() }}
+          </div>
+        }
+      }
+    </div>
+
+    @if (!successful()) {
+      <div class="dialog-footer">
+        <app-button variant="ghost" size="sm" [disabled]="creating()" (click)="onCancel()">
+          Cancelar
+        </app-button>
+        <app-button variant="primary" [disabled]="!selectedDeckId() || creating()" [loading]="creating()" (click)="onCreate()">
+          {{ creating() ? 'Creando…' : 'Crear Partida' }}
+        </app-button>
+      </div>
+    }
+  </div>
+</div>

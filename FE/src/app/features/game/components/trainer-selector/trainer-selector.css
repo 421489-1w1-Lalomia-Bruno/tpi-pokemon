@@ -1,0 +1,80 @@
+.selector-overlay {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(60% 50% at 50% 50%, rgba(123, 47, 247, 0.1), transparent 70%),
+    rgba(4, 7, 14, 0.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fade-in 0.15s ease both;
+}
+
+.selector-modal {
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(123, 47, 247, 0.1), transparent 60%),
+    linear-gradient(160deg, var(--ink-800), var(--ink-900));
+  border: 1px solid rgba(155, 92, 255, 0.35);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  min-width: 320px;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 0 40px rgba(123, 47, 247, 0.15), var(--shadow-lg);
+  animation: slide-in-up 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.selector-modal h2 {
+  color: #fff;
+  margin: 0 0 16px;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.selector-modal__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selector-modal__card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(155, 92, 255, 0.18);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.selector-modal__card:hover {
+  border-color: rgba(155, 92, 255, 0.5);
+  background: rgba(123, 47, 247, 0.12);
+  box-shadow: 0 0 16px rgba(123, 47, 247, 0.2);
+  transform: translateY(-2px);
+}
+
+.trainer-name {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.trainer-subtype {
+  color: #b794ff;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.trainer-effect {
+  color: #aaa;
+  font-size: 0.8rem;
+  line-height: 1.3;
+}

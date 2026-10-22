@@ -1,0 +1,17 @@
+@if (show()) {
+  <div class="target-selector-overlay">
+    <div class="target-selector-modal">
+      <h2>Adjuntar energía</h2>
+      <p>Seleccioná un Pokémon de la banca ({{ remaining() }} restantes):</p>
+      <div class="target-selector-modal__grid">
+        @for (pokemon of benchPokemon(); track pokemon.card.id) {
+          <button class="target-selector-modal__card" (click)="targetSelected.emit(pokemon.card.id)">
+            <span class="target-selector-modal__card-name">{{ pokemon.card.name }}</span>
+            <span class="target-selector-modal__card-hp">{{ pokemon.card.hp }} PS</span>
+          </button>
+        }
+      </div>
+      <button class="target-selector-modal__cancel" (click)="cancel.emit()">Cancelar</button>
+    </div>
+  </div>
+}

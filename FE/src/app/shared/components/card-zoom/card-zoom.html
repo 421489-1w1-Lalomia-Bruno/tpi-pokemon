@@ -1,0 +1,182 @@
+@if (card(); as c) {
+  <div
+    class="overlay"
+    (click)="close.emit()"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="'Detalle de ' + c.name"
+  >
+    <div class="sheet" (click)="$event.stopPropagation()">
+      <button class="sheet__close" type="button" (click)="close.emit()" aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+          <path d="M18 6L6 18"/><path d="M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <!-- Carta grande con holo 3D -->
+      <div class="sheet__card">
+        <app-card [cardModel]="c" />
+      </div>
+
+      <!-- Panel de detalles -->
+      <div class="sheet__info">
+        <header class="info__head">
+          <h2 class="info__name">{{ c.name }}</h2>
+          <div class="info__tags">
+            <span class="chip">{{ c.supertype }}</span>
+            @for (st of c.subtypes; track st) {
+              <span class="chip">{{ st }}</span>
+            }
+            @if (c.rarity) {
+              <span class="chip chip--rarity">{{ c.rarity }}</span>
+            }
+            @if (c.specialEnergy) {
+              <span class="chip chip--special">Special Energy</span>
+            }
+          </div>
+        </header>
+
+        <!-- Stats rápidas -->
+        <div class="stats">
+          @if (c.hp) {
+            <div class="stat">
+              <span class="stat__label">HP</span>
+              <span class="stat__value stat__value--hp">{{ c.hp }}</span>
+            </div>
+          }
+          @if (c.types.length) {
+            <div class="stat">
+              <span class="stat__label">Tipo</span>
+              <span class="stat__value energies">
+                @for (t of c.types; track t) {
+                  <span class="energy" [attr.data-type]="t" [title]="t">{{ t.charAt(0) }}</span>
+                }
+              </span>
+            </div>
+          }
+          @if (c.stage) {
+            <div class="stat">
+              <span class="stat__label">Etapa</span>
+              <span class="stat__value">{{ c.stage }}</span>
+            </div>
+          }
+          @if (c.retreatCost !== null) {
+            <div class="stat">
+              <span class="stat__label">Retirada</span>
+              <span class="stat__value energies">
+                @for (slot of retreatSlots(); track slot) {
+                  <span class="energy" data-type="COLORLESS">★</span>
+                } @empty {
+                  <span>0</span>
+                }
+              </span>
+            </div>
+          }
+        </div>
+
+        <!-- Efecto de carta Entrenador -->
+        @if (isTrainer() && trainerEffect()) {
+          <section class="block">
+            <h3 class="block__title">Efecto</h3>
+            <p class="trainer-effect">{{ trainerEffect() }}</p>
+          </section>
+        }
+
+        <!-- Habilidades -->
+        @if (hasAbilities()) {
+          <section class="block">
+            <h3 class="block__title">Habilidades</h3>
+            @for (ab of c.abilities; track ab.name) {
+              <div class="ability">
+                <span class="ability__tag">Habilidad</span>
+                <span class="ability__name">{{ ab.name }}</span>
+                @if (ab.effectText) {
+                  <p class="ability__text">{{ ab.effectText }}</p>
+                }
+              </div>
+            }
+          </section>
+        }
+
+        <!-- Ataques -->
+        @if (hasAttacks()) {
+          <section class="block">
+            <h3 class="block__title">Ataques</h3>
+            @for (atk of c.attacks; track atk.name) {
+              <div class="attack">
+                <div class="attack__head">
+                  <span class="attack__cost energies">
+                    @for (e of atk.cost; track $index) {
+                      <span class="energy" [attr.data-type]="e" [title]="e">{{ e.charAt(0) }}</span>
+                    }
+                  </span>
+                  <span class="attack__name">{{ atk.name }}</span>
+                  @if (atk.damage) {
+                    <span class="attack__damage">{{ atk.damage }}</span>
+                  }
+                </div>
+                @if (atk.effectText) {
+                  <p class="attack__text">{{ atk.effectText }}</p>
+                }
+              </div>
+            }
+          </section>
+        }
+
+        <!-- Cartas adjuntas (energías + herramienta) -->
+        @if (attachedEnergy().length > 0 || attachedTool()) {
+
+          <section class="attachments">
+            @if (attachedEnergy().length > 0) {
+              <div class="attachments__section">
+                <span class="attachments__label">Energías ({{ attachedEnergy().length }})</span>
+                <div class="attachments__gems">
+                  @for (unit of flatAttachedEnergies(); track $index) {
+                    <span class="energy" [attr.data-type]="unit" [title]="unit">{{ unit.charAt(0) }}</span>
+                  }
+                </div>
+              </div>
+            }
+            @if (attachedTool(); as tool) {
+              <div class="attachments__section">
+                <span class="attachments__label">Herramienta</span>
+                <div class="attachments__tool-card">
+                  <div class="attachments__tool-head">
+                    <span class="attachments__tool-name">{{ tool.name }}</span>
+                    <span class="attachments__tool-subtype">{{ tool.subtype }}</span>
+                  </div>
+                  @if (tool.effect) {
+                    <p class="attachments__tool-effect">{{ tool.effect }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </section>
+        }
+
+        <!-- Debilidad / Resistencia -->
+        @if (c.weaknessType || c.resistanceType) {
+          <section class="block weakres">
+            @if (c.weaknessType) {
+              <div class="weakres__item">
+                <span class="weakres__label">Debilidad</span>
+                <span class="weakres__value weak">{{ c.weaknessType }} ×2</span>
+              </div>
+            }
+            @if (c.resistanceType) {
+              <div class="weakres__item">
+                <span class="weakres__label">Resistencia</span>
+                <span class="weakres__value res">{{ c.resistanceType }}</span>
+              </div>
+            }
+          </section>
+        }
+
+        <footer class="info__foot">
+          <span>N.º {{ c.cardNumber }}</span>
+          <span>{{ c.setId | uppercase }}</span>
+        </footer>
+      </div>
+    </div>
+  </div>
+}

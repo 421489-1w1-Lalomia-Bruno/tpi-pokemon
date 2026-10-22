@@ -1,0 +1,13 @@
+@if (type()) {
+  @switch (variant()) {
+    @case ('circle') {
+      <span class="badge badge--circle" aria-hidden="true">{{ firstChar() }}</span>
+    }
+    @case ('chip') {
+      <span class="badge badge--chip">{{ label() }}</span>
+    }
+    @case ('pill') {
+      <span class="badge badge--pill">{{ label() }}</span>
+    }
+  }
+}

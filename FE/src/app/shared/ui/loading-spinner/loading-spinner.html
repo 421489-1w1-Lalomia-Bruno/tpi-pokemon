@@ -1,0 +1,19 @@
+@if (variant() === 'spinner') {
+  <div class="spinner-container">
+    <div class="pokeball-spinner" aria-hidden="true">
+      <div class="pokeball-spinner__top"></div>
+      <div class="pokeball-spinner__bottom"></div>
+      <div class="pokeball-spinner__ring"></div>
+      <div class="pokeball-spinner__center"></div>
+    </div>
+    @if (text()) {
+      <p class="spinner-text">{{ text() }}</p>
+    }
+  </div>
+} @else {
+  <div class="skeleton" aria-hidden="true">
+    <div class="skeleton__line"></div>
+    <div class="skeleton__line skeleton__line--short"></div>
+    <div class="skeleton__line skeleton__line--mid"></div>
+  </div>
+}

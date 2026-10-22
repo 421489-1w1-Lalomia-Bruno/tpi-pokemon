@@ -1,0 +1,82 @@
+@if (mode() === 'list') {
+  <div class="page page--list">
+    <header class="page__hero">
+      <p class="page__eyebrow">Constructor · Expansión XY1</p>
+      <h1 class="page__title">Mis <span>Mazos</span></h1>
+    </header>
+
+    <app-deck-list
+      [decks]="decks()"
+      [loading]="loading()"
+      [selectedDeckId]="selectedDeckId()"
+      (selectDeck)="onSelectDeck($event)"
+      (deleteDeck)="onDeleteDeck($event)"
+      (createNew)="onCreateNew()"
+      (useInMatch)="onUseInMatch($event)"
+    />
+    @if (errorMessage()) {
+      <div class="page__error" role="alert">{{ errorMessage() }}</div>
+    }
+  </div>
+} @else {
+  <div class="page page--edit">
+    <div class="page__topbar">
+      <button class="page__back" (click)="onBackToList()">← Volver a mis mazos</button>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="page__error" role="alert">{{ errorMessage() }}</div>
+    }
+
+    <div class="page__layout">
+      <aside class="page__catalog">
+        <app-card-catalog
+          [deckCards]="currentDeckCards()"
+          [maxedCardIds]="maxedCardIds()"
+          (cardSelected)="onCardSelected($event)"
+          (cardClicked)="onCardDetail($event)"
+        />
+      </aside>
+
+      <main class="page__editor">
+        <app-deck-editor
+          [cards]="currentDeckCards()"
+          [deckName]="currentDeckName()"
+          (deckNameChange)="currentDeckName.set($event)"
+          [saving]="saving()"
+          [editing]="isEditing()"
+          [maxedCardIds]="maxedCardIds()"
+          (cardDropped)="onCardSelected($event)"
+          (incrementCard)="onIncrementCard($event)"
+          (decrementCard)="onDecrementCard($event)"
+          (removeCard)="onRemoveCard($event)"
+          (save)="onSave()"
+          (fillRandom)="onRandomFill()"
+          (clearAll)="onClearAll()"
+        />
+      </main>
+
+      <aside class="page__summary">
+        <app-deck-summary
+          [deckCards]="currentDeckCards()"
+          [validationResult]="validationResult()"
+        />
+      </aside>
+    </div>
+  </div>
+}
+
+<app-card-zoom [card]="selectedCard()" (close)="onCloseDetail()" />
+
+<app-modal
+  [show]="showDeleteModal()"
+  title="Eliminar mazo"
+  size="sm"
+  (close)="onCancelDelete()"
+>
+  <p>¿Eliminar el mazo <strong>{{ pendingDeleteDeck()?.name }}</strong>? Esta acción no se puede deshacer.</p>
+  <div footer>
+    <app-button variant="secondary" (click)="onCancelDelete()">Cancelar</app-button>
+    <app-button variant="danger" [loading]="deleting()" (click)="onConfirmDelete()">Eliminar</app-button>
+  </div>
+</app-modal>

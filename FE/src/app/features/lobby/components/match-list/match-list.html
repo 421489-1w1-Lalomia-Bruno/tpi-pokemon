@@ -1,0 +1,162 @@
+@if (errorMessage()) {
+  <div class="error-banner" role="alert">
+    <p>{{ errorMessage() }}</p>
+  </div>
+}
+
+<section class="deck-selector glass" aria-label="Mazo equipado">
+  <span class="deck-selector__label">Mazo equipado</span>
+  @if (deckLoading()) {
+    <span class="deck-selector__loading">Cargando…</span>
+  } @else if (playerDecks().length === 0) {
+    <span class="deck-selector__empty">Sin mazos válidos</span>
+  } @else {
+    <div class="deck-selector__list" role="radiogroup">
+      @for (deck of playerDecks(); track deck.id) {
+        <button
+          class="deck-selector__option"
+          [class.is-equipped]="equippedDeckId() === deck.id"
+          type="button"
+          role="radio"
+          [attr.aria-checked]="equippedDeckId() === deck.id"
+          (click)="onEquipDeck(deck.id)"
+        >
+          <span class="deck-selector__name">{{ deck.name }}</span>
+          <span class="deck-selector__meta">{{ deck.totalCards }} cartas</span>
+          @if (equippedDeckId() === deck.id) {
+            <svg class="deck-selector__check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          }
+        </button>
+      }
+    </div>
+  }
+</section>
+
+@if (myMatches().length > 0) {
+  <section class="matches matches--mine" aria-label="Mis partidas en curso">
+    <h2 class="matches__heading">Mis partidas</h2>
+    @for (match of myMatches(); track match.id) {
+      <article class="match glass match--mine">
+        <div class="match__players">
+          <div class="player">
+            <span class="player__avatar" [attr.title]="match.player1Username ?? match.player1Id">
+              {{ getInitials(match.player1Username ?? match.player1Id) }}
+            </span>
+            <span class="player__name">{{ match.player1Username ?? match.player1Id }}</span>
+          </div>
+
+          <span class="match__vs" aria-hidden="true">VS</span>
+
+          <div class="player" [class.player--empty]="!match.player2Id">
+            <span class="player__avatar player__avatar--ghost">
+              {{ getInitials(opponentLabel(match)) }}
+            </span>
+            <span class="player__name">{{ opponentLabel(match) }}</span>
+          </div>
+        </div>
+
+        <div class="match__meta">
+          <span class="match__id">#{{ match.id.slice(0, 8) }}</span>
+          <span class="match__count">{{ match.player2Id ? '2' : '1' }}/2</span>
+          <span class="match__status" [class.is-active]="isActiveMatch(match)">
+            {{ statusLabel(match.status) }}
+          </span>
+          @if (getDisconnectCountdown(match) > 0) {
+            <span class="match__timer match__timer--danger">Abandono: {{ getDisconnectCountdown(match) | timeRemaining }}</span>
+          }
+        </div>
+
+        <div class="match__actions">
+          @if (match.player1Id === playerId) {
+            <app-button
+              variant="danger"
+              size="sm"
+              (click)="onLeave(match.id)"
+              [disabled]="leavingId() === match.id"
+              title="Abandonar partida"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <path d="M18 6L6 18"/><path d="M6 6l12 12"/>
+              </svg>
+            </app-button>
+          }
+          @if (isActiveMatch(match)) {
+            <app-button
+              variant="primary"
+              size="sm"
+              (click)="onRejoin(match.id)"
+              [disabled]="rejoiningId() === match.id"
+            >
+              {{ rejoiningId() === match.id ? 'Volviendo…' : 'Volver' }}
+            </app-button>
+          }
+        </div>
+      </article>
+    }
+  </section>
+}
+
+@if (loading()) {
+  <div class="match-loading" role="status" aria-live="polite" aria-label="Cargando partidas">
+    <app-loading-spinner size="md" text="Buscando partidas disponibles…" />
+  </div>
+} @else {
+  <section class="matches" aria-label="Partidas disponibles">
+    @for (match of availableMatches(); track match.id) {
+      <article class="match glass">
+        <div class="match__players">
+          <div class="player">
+            <span class="player__avatar" [attr.title]="match.player1Username ?? match.player1Id">
+              {{ getInitials(match.player1Username ?? match.player1Id) }}
+            </span>
+            <span class="player__name">{{ match.player1Username ?? match.player1Id }}</span>
+          </div>
+
+          <span class="match__vs" aria-hidden="true">VS</span>
+
+          <div class="player" [class.player--empty]="!match.player2Id">
+            <span class="player__avatar player__avatar--ghost">
+              {{ match.player2Id ? getInitials(match.player2Username ?? match.player2Id) : '?' }}
+            </span>
+            <span class="player__name">{{ match.player2Username ?? match.player2Id ?? 'Esperando…' }}</span>
+          </div>
+        </div>
+
+        <div class="match__meta">
+          <span class="match__id">#{{ match.id.slice(0, 8) }}</span>
+          <span class="match__count">{{ match.player2Id ? '2' : '1' }}/2</span>
+          <span class="match__status" [class.is-waiting]="match.status === 'WAITING'">
+            {{ match.status === 'WAITING' ? 'Esperando' : match.status }}
+          </span>
+        </div>
+
+        <div class="match__actions">
+          <app-button
+            variant="primary"
+            size="sm"
+            (click)="onJoin(match.id)"
+            [disabled]="joining() || !equippedDeckId()"
+          >
+            @if (!equippedDeckId()) {
+              Seleccioná un mazo
+            } @else if (joining()) {
+              Uniéndose…
+            } @else {
+              Unirse
+            }
+          </app-button>
+        </div>
+      </article>
+    } @empty {
+      <div class="matches__empty glass" role="status" aria-live="polite">
+        <svg class="matches__empty-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="40" height="40" aria-hidden="true">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <h2>Sin partidas disponibles</h2>
+        <p>No hay partidas esperando jugadores. ¡Creá la tuya y esperá rival!</p>
+      </div>
+    }
+  </section>
+}

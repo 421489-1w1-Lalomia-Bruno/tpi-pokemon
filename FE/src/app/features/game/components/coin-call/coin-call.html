@@ -1,0 +1,24 @@
+<div class="coin-call-overlay">
+  <div class="coin-call-content">
+    @if (isCaller()) {
+      <h1>¡Te tocó el sorteo!</h1>
+      <p class="sub-text">Elegí cara o cruz. Si acertás, empezás vos.</p>
+
+      <div class="coin-call-actions">
+        <app-button variant="primary" size="lg" [disabled]="submitted()" (click)="onCall('HEADS')">
+          Cara
+        </app-button>
+        <app-button variant="secondary" size="lg" [disabled]="submitted()" (click)="onCall('TAILS')">
+          Cruz
+        </app-button>
+      </div>
+
+      @if (submitted()) {
+        <p class="sub-text">Tirando la moneda…</p>
+      }
+    } @else {
+      <h1>Sorteo inicial</h1>
+      <app-loading-spinner size="lg" text="Tu rival está eligiendo cara o cruz…" />
+    }
+  </div>
+</div>

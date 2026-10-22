@@ -1,0 +1,15 @@
+@if (show()) {
+  <div class="promote-overlay">
+    <div class="promote-modal">
+      <h2>¡Pokémon debilitado!</h2>
+      <p>Seleccioná un Pokémon de la banca para ponerlo en acción:</p>
+      <div class="promote-modal__grid">
+        @for (pokemon of benchPokemon(); track pokemon.card.id; let i = $index) {
+          <button class="promote-modal__card" (click)="promote.emit(i)">
+            {{ pokemon.card.name }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}

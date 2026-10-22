@@ -1,0 +1,33 @@
+<div class="game-container">
+  @if (gameState.awaitingCoinCall()) {
+    <app-coin-call />
+  } @else if (gameState.status() === 'WAITING' || gameState.status() === 'SETUP') {
+    <app-setup-phase [matchId]="matchId()" />
+  } @else if (gameState.status() === 'ACTIVE' && showingCoinFlip()) {
+    <app-coin-flip
+      [winnerId]="gameState.firstPlayerId()"
+      [flipResult]="coinFlipResultLower()"
+      [customMessage]="coinMessage()"
+      (finished)="onCoinFlipFinished()"
+    />
+  } @else if (gameState.status() === 'ACTIVE' && !showingCoinFlip()) {
+    <app-game-board />
+  } @else if (gameState.isFinished()) {
+    <app-game-over />
+  } @else {
+    <div class="game-loading">
+      <app-loading-spinner size="lg" text="Conectando a la partida…" />
+    </div>
+  }
+  <!-- Animación de moneda en partida (Roller Skates, ataques con monedas, etc.) -->
+  @if (inGameCoin(); as coin) {
+    <app-coin-flip
+      [flipResult]="coin.result"
+      [customMessage]="coin.message"
+      [durationMs]="2500"
+      (finished)="onInGameCoinFinished()"
+    />
+  }
+
+  <app-notification-toast />
+</div>

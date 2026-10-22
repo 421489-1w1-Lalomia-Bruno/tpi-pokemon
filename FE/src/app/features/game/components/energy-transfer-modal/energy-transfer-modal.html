@@ -1,0 +1,61 @@
+<div class="transfer-overlay">
+  <div class="transfer-modal">
+    <h2 class="transfer-modal__title">Fairy Transfer</h2>
+    <p class="transfer-modal__body">Selecciona un Pokémon con Fairy Energy para transferir y el destino.</p>
+
+    <div class="transfer-modal__columns">
+      <!-- Fuente -->
+      <div class="transfer-column">
+        <h3 class="transfer-column__title">Fuente (con Fairy Energy)</h3>
+        @if (sourcesWithEnergy().length === 0) {
+          <p class="transfer-column__empty">No tienes Pokémon con Fairy Energy.</p>
+        } @else {
+          <div class="transfer-column__cards">
+            @for (p of sourcesWithEnergy(); track p.card.id) {
+              <div
+                class="transfer-card"
+                [class.transfer-card--selected]="selectedSource() === p.card.id"
+                (click)="selectedSource.set(p.card.id)"
+              >
+                <app-card [cardModel]="toCardModel(p)" [interactive]="false" />
+                <span class="transfer-card__label">{{ p.card.name }}</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Destino -->
+      <div class="transfer-column">
+        <h3 class="transfer-column__title">Destino</h3>
+        @if (pokemonList().length === 0) {
+          <p class="transfer-column__empty">No tienes Pokémon.</p>
+        } @else {
+          <div class="transfer-column__cards">
+            @for (p of pokemonList(); track p.card.id) {
+              <div
+                class="transfer-card"
+                [class.transfer-card--selected]="selectedTarget() === p.card.id"
+                [class.transfer-card--disabled]="p.card.id === selectedSource()"
+                (click)="p.card.id !== selectedSource() && selectedTarget.set(p.card.id)"
+              >
+                <app-card [cardModel]="toCardModel(p)" [interactive]="false" />
+                <span class="transfer-card__label">{{ p.card.name }}</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="transfer-modal__actions">
+      <app-button variant="secondary" size="sm" (click)="onCancel()">Cancelar</app-button>
+      <app-button
+        variant="primary"
+        size="sm"
+        [disabled]="!canTransfer()"
+        (click)="onTransfer()"
+      >Transferir</app-button>
+    </div>
+  </div>
+</div>

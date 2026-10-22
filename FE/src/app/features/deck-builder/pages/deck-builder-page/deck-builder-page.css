@@ -1,0 +1,108 @@
+:host {
+  /* Acento VERDE para toda la sección Deck Builder (sobrescribe el rojo global) */
+  --accent: #1faa47;
+  --accent-bright: #2fd35b;
+  --accent-deep: #0f7a34;
+  --accent-glow: rgba(47, 211, 91, 0.4);
+
+  display: block;
+  min-height: 100vh;
+  /* Tinte verde en el fondo de la sección */
+  background:
+    radial-gradient(1100px 600px at 12% -8%, rgba(31, 170, 71, 0.16), transparent 60%),
+    radial-gradient(900px 700px at 100% 0%, rgba(47, 211, 91, 0.08), transparent 55%);
+}
+
+.page {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+/* ---- Hero (lista) ---- */
+.page__hero {
+  text-align: center;
+  padding: clamp(1.25rem, 4vw, 2.5rem) 1rem 1.5rem;
+}
+.page__eyebrow {
+  margin: 0 0 0.4rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  font-weight: 600;
+}
+.page__title {
+  margin: 0;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #fff, #c9c9d2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.page__title span {
+  background: linear-gradient(180deg, var(--accent-bright), var(--accent-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- Topbar (editor) ---- */
+.page__topbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.1rem;
+}
+.page__back {
+  appearance: none;
+  cursor: pointer;
+  padding: 0.55rem 1.1rem;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 9px;
+  transition: transform 0.18s ease, background 0.25s ease, color 0.2s ease;
+}
+.page__back:hover {
+  transform: translateX(-3px);
+  background: var(--glass-bg-strong);
+  color: #fff;
+}
+
+/* ---- Layout de 3 columnas ---- */
+.page__layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr) minmax(260px, 320px);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: start;
+}
+.page__catalog,
+.page__summary {
+  position: sticky;
+  top: calc(var(--appbar-h) + 1rem);
+}
+
+.page__error {
+  margin: 1rem 0;
+  padding: 0.9rem 1.1rem;
+  background: rgba(238, 21, 21, 0.1);
+  border: 1px solid rgba(238, 21, 21, 0.35);
+  border-radius: var(--r-md);
+  color: #ffb4b4;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1100px) {
+  .page__layout {
+    grid-template-columns: 1fr;
+  }
+  .page__catalog,
+  .page__summary {
+    position: static;
+  }
+}

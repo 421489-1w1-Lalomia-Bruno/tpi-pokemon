@@ -1,0 +1,54 @@
+@if (card(); as c) {
+  <div class="modal-overlay" (click)="close.emit()" role="dialog" aria-modal="true" aria-label="Detalle de carta">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="close.emit()" aria-label="Cerrar">✕</button>
+      <div class="modal-body">
+        <app-card [cardModel]="c" />
+        <div class="modal-info">
+          <h2 class="modal-name">{{ c.name }}</h2>
+          <table class="modal-table">
+            <tbody>
+              <tr><td>Supertype</td><td>{{ c.supertype }}</td></tr>
+              @if (c.subtypes.length) {
+                <tr><td>Subtipos</td><td>{{ c.subtypes.join(', ') }}</td></tr>
+              }
+              @if (c.hp) {
+                <tr><td>HP</td><td>{{ c.hp }}</td></tr>
+              }
+              @if (c.types.length) {
+                <tr><td>Tipos</td><td>{{ c.types.join(', ') }}</td></tr>
+              }
+              @if (c.stage) {
+                <tr><td>Etapa</td><td>{{ c.stage }}</td></tr>
+              }
+              @if (c.evolvesFrom) {
+                <tr><td>Evoluciona de</td><td>{{ c.evolvesFrom }}</td></tr>
+              }
+              @if (c.weaknessType) {
+                <tr><td>Debilidad</td><td>{{ c.weaknessType }}</td></tr>
+              }
+              @if (c.resistanceType) {
+                <tr><td>Resistencia</td><td>{{ c.resistanceType }}</td></tr>
+              }
+              @if (c.retreatCost !== null) {
+                <tr><td>Retirada</td><td>{{ c.retreatCost }}</td></tr>
+              }
+              <tr><td>Rareza</td><td>{{ c.rarity ?? '—' }}</td></tr>
+              <tr><td>Número</td><td>{{ c.cardNumber }}</td></tr>
+            </tbody>
+          </table>
+          @if (c.rules && c.rules.length) {
+            <div class="modal-rules">
+              <h3>Reglas</h3>
+              <ul>
+                @for (rule of c.rules; track $index) {
+                  <li>{{ rule }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

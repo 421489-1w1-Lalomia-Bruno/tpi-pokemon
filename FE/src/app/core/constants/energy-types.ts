@@ -1,0 +1,15 @@
+export const ENERGY_TYPES = {
+  FIRE: 'FIRE',
+  WATER: 'WATER',
+  GRASS: 'GRASS',
+  LIGHTNING: 'LIGHTNING',
+  PSYCHIC: 'PSYCHIC',
+  FIGHTING: 'FIGHTING',
+  DARKNESS: 'DARKNESS',
+  METAL: 'METAL',
+  FAIRY: 'FAIRY',
+  DRAGON: 'DRAGON',
+  COLORLESS: 'COLORLESS',
+} as const;
+
+export type EnergyType = typeof ENERGY_TYPES[keyof typeof ENERGY_TYPES];

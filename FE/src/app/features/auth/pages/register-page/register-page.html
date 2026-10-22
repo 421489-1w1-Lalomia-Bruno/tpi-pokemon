@@ -1,0 +1,92 @@
+<main class="page-centered">
+  <section class="register__card glass">
+    <div class="register__hero">
+      <h1 class="register__title">Crear cuenta</h1>
+      <p class="register__subtitle">Unite a la liga Pokémon TCG</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register__form" novalidate>
+      @if (errorMessage(); as msg) {
+        <div class="register__error" role="alert">
+          <span class="register__error-icon" aria-hidden="true">!</span>
+          {{ msg }}
+        </div>
+      }
+
+      <label class="form-label">
+        <span>Usuario</span>
+        <input
+          type="text"
+          formControlName="username"
+          id="register-username"
+          class="form-input"
+          placeholder="Elegí un nombre de usuario"
+          autocomplete="username"
+          aria-label="Nombre de usuario"
+          aria-describedby="register-username-error"
+          [class.form-input--error]="registerForm.get('username')?.touched && registerForm.get('username')?.invalid"
+        />
+        @if (registerForm.get('username')?.touched && registerForm.get('username')?.hasError('required')) {
+          <span id="register-username-error" class="form-error" role="alert">El usuario es obligatorio</span>
+        } @else if (registerForm.get('username')?.touched && registerForm.get('username')?.hasError('minlength')) {
+          <span id="register-username-error" class="form-error" role="alert">Mínimo 3 caracteres</span>
+        }
+      </label>
+
+      <label class="form-label">
+        <span>Contraseña</span>
+        <input
+          type="password"
+          formControlName="password"
+          class="form-input"
+          placeholder="Mínimo 8 caracteres"
+          autocomplete="new-password"
+          aria-label="Contraseña"
+          aria-describedby="register-password-error"
+          [class.form-input--error]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+        />
+        @if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')) {
+          <span id="register-password-error" class="form-error" role="alert">La contraseña es obligatoria</span>
+        } @else if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')) {
+          <span id="register-password-error" class="form-error" role="alert">Mínimo 8 caracteres</span>
+        }
+      </label>
+
+      <label class="form-label">
+        <span>Repetir contraseña</span>
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          class="form-input"
+          placeholder="Repetí tu contraseña"
+          autocomplete="new-password"
+          aria-label="Confirmar contraseña"
+          aria-describedby="register-confirm-error"
+          [class.form-input--error]="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid"
+        />
+        @if (registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.hasError('required')) {
+          <span id="register-confirm-error" class="form-error" role="alert">Repetí la contraseña</span>
+        } @else if (registerForm.get('confirmPassword')?.touched && registerForm.hasError('passwordMismatch')) {
+          <span id="register-confirm-error" class="form-error" role="alert">Las contraseñas no coinciden</span>
+        }
+      </label>
+
+      <label class="form-label">
+        <span>Género (opcional)</span>
+        <select formControlName="gender" class="form-input register__select" aria-label="Género">
+          @for (opt of genderOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
+      </label>
+
+      <app-button type="submit" variant="primary" size="lg" [disabled]="loading()" [loading]="loading()" class="register__submit">
+        {{ loading() ? 'Creando cuenta…' : 'Crear cuenta' }}
+      </app-button>
+    </form>
+
+    <p class="register__footer">
+      ¿Ya tenés cuenta? <a routerLink="/login" class="register__link">Iniciá sesión</a>
+    </p>
+  </section>
+</main>

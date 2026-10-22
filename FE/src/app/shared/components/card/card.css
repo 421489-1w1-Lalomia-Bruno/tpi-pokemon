@@ -1,0 +1,346 @@
+:host {
+  --mx: 50%;
+  --my: 50%;
+  --rx: 0deg;
+  --ry: 0deg;
+  --pointer-d: 0;
+  --interacting: 0;
+  --scale: 1;
+
+  display: block;
+  perspective: 900px;
+  font-family: var(--font-ui);
+}
+
+/* ---- Carta + tilt 3D ---- */
+.card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 245 / 342;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry)) scale(var(--scale));
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease, filter 0.3s ease;
+  outline: none;
+  will-change: transform;
+}
+
+/* Mientras el puntero está encima: seguimiento inmediato + realce */
+.card.is-interacting {
+  transition: box-shadow 0.2s ease, filter 0.2s ease;
+  --scale: 1.06;
+  z-index: 2;
+}
+:host:focus-within .card {
+  --scale: 1.04;
+}
+.card:focus-visible {
+  box-shadow: 0 0 0 3px var(--poke-red-bright);
+}
+
+/* ---- Marco visual ---- */
+.card__frame {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: linear-gradient(160deg, var(--ink-700), var(--ink-850));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: box-shadow 0.4s ease;
+}
+.card.is-interacting .card__frame {
+  box-shadow:
+    var(--shadow-lg),
+    0 0 28px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* ---- Imagen de la carta ---- */
+.card__image {
+  position: absolute;
+  inset: 0;
+}
+.card__image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Capa 1: brillo suave (glow) que sigue al puntero ---- */
+.card__shine {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.55),
+    rgba(255, 255, 255, 0.12) 30%,
+    transparent 55%
+  );
+  mix-blend-mode: soft-light;
+  opacity: calc(var(--interacting) * 0.9);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* ---- Capa 2: holográfico de color (arcoíris animado por puntero) ---- */
+.card__holo {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 119, 115, 0.55) 0%,
+      rgba(255, 237, 95, 0.55) 12%,
+      rgba(168, 255, 95, 0.55) 24%,
+      rgba(95, 209, 255, 0.55) 36%,
+      rgba(184, 95, 255, 0.55) 48%,
+      rgba(255, 119, 115, 0.55) 60%
+    ),
+    radial-gradient(
+      circle at var(--mx) var(--my),
+      rgba(255, 255, 255, 0.6),
+      transparent 45%
+    );
+  background-size: 300% 300%, 100% 100%;
+  background-position: calc(var(--mx) * -0.6 + 50%) calc(var(--my) * -0.6 + 50%), 0 0;
+  background-blend-mode: color-dodge;
+  mix-blend-mode: color-dodge;
+  filter: saturate(1.4) contrast(1.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* ---- Capa 3: destello especular nítido (glare) ---- */
+.card__glare {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.45) 48%,
+    rgba(255, 255, 255, 0.1) 52%,
+    transparent 65%
+  );
+  background-size: 250% 250%;
+  background-position: calc(var(--mx) * 1.2) calc(var(--my) * 1.2);
+  mix-blend-mode: overlay;
+  opacity: calc(var(--interacting) * 0.65);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* Intensidad del holo según rareza */
+.card[data-holo='holo'] .card__holo {
+  opacity: calc(var(--interacting) * 0.5);
+}
+.card[data-holo='ultra'] .card__holo {
+  opacity: calc(0.16 + var(--interacting) * 0.6);
+}
+.card[data-holo='ultra'] .card__frame {
+  border-color: rgba(255, 215, 120, 0.5);
+}
+
+/* ---- Energy overlay on card image ---- */
+.card__energy-overlay {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  z-index: 5;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 3px;
+  pointer-events: none;
+}
+
+.card__energy-gem {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.card__energy-gem[data-type='FIRE']      { background: var(--type-fire); }
+.card__energy-gem[data-type='WATER']     { background: var(--type-water); }
+.card__energy-gem[data-type='GRASS']     { background: var(--type-grass); }
+.card__energy-gem[data-type='LIGHTNING'] { background: var(--type-lightning); }
+.card__energy-gem[data-type='PSYCHIC']   { background: var(--type-psychic); }
+.card__energy-gem[data-type='FIGHTING']  { background: var(--type-fighting); }
+.card__energy-gem[data-type='DARKNESS']  { background: var(--type-darkness); }
+.card__energy-gem[data-type='METAL']     { background: var(--type-metal); }
+.card__energy-gem[data-type='FAIRY']     { background: var(--type-fairy); }
+.card__energy-gem[data-type='DRAGON']    { background: var(--type-dragon); }
+.card__energy-gem[data-type='COLORLESS'] { background: var(--type-colorless); }
+
+/* Compact variant: smaller gems */
+.card--compact .card__energy-gem {
+  width: 16px;
+  height: 16px;
+  border-width: 1.5px;
+}
+.card--compact .card__energy-overlay {
+  right: 3px;
+  bottom: 3px;
+  gap: 2px;
+}
+
+/* ---- HP flotante ---- */
+.card__hp-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 3px 9px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  background: linear-gradient(180deg, var(--poke-red-bright), var(--poke-red-deep));
+  border-radius: 999px;
+  box-shadow: var(--glow-red), 0 2px 6px rgba(0, 0, 0, 0.4);
+  transform: translateZ(40px);
+}
+.card__hp-badge small {
+  font-size: 0.6rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* ---- Franja de metadatos (reveal en hover) ---- */
+.card__meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: 1.4rem 0.7rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: linear-gradient(180deg, transparent, rgba(7, 7, 10, 0.92) 55%);
+  transform: translateY(40%);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+}
+.card.is-interacting .card__meta,
+:host:focus-within .card__meta {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.card__name {
+  font-weight: 700;
+  font-size: 0.86rem;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fff;
+}
+
+.card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.card__type,
+.card__pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.card__pill {
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  color: var(--text-dim);
+}
+.card__pill--trainer { color: #ffd479; }
+.card__pill--energy { color: #9fe0ff; }
+
+/* Colores por tipo de energía */
+.card__type[data-type='FIRE']      { background: var(--type-fire); }
+.card__type[data-type='WATER']     { background: var(--type-water); }
+.card__type[data-type='GRASS']     { background: var(--type-grass); }
+.card__type[data-type='LIGHTNING'] { background: var(--type-lightning); color: #2a2400; }
+.card__type[data-type='PSYCHIC']   { background: var(--type-psychic); }
+.card__type[data-type='FIGHTING']  { background: var(--type-fighting); }
+.card__type[data-type='DARKNESS']  { background: var(--type-darkness); }
+.card__type[data-type='METAL']     { background: var(--type-metal); }
+.card__type[data-type='FAIRY']     { background: var(--type-fairy); }
+.card__type[data-type='DRAGON']    { background: var(--type-dragon); }
+.card__type[data-type='COLORLESS'] { background: var(--type-colorless); color: #1a1a1a; }
+
+/* Borde sutil tintado según el tipo principal */
+.card[data-type='FIRE']      { --type-glow: var(--type-glow-fire); }
+.card[data-type='WATER']     { --type-glow: var(--type-glow-water); }
+.card[data-type='GRASS']     { --type-glow: var(--type-glow-grass); }
+.card[data-type='LIGHTNING'] { --type-glow: var(--type-glow-lightning); }
+.card[data-type='PSYCHIC']   { --type-glow: var(--type-glow-psychic); }
+/* Glow edges for remaining types */
+.card[data-type='FIGHTING']  { --type-glow: var(--type-glow-fighting); }
+.card[data-type='DARKNESS']  { --type-glow: var(--type-glow-darkness); }
+.card[data-type='METAL']     { --type-glow: var(--type-glow-metal); }
+.card[data-type='FAIRY']     { --type-glow: var(--type-glow-fairy); }
+.card[data-type='DRAGON']    { --type-glow: var(--type-glow-dragon); }
+.card[data-type='COLORLESS'] { --type-glow: var(--type-glow-colorless); }
+.card.is-interacting {
+  filter: drop-shadow(0 18px 28px var(--type-glow, rgba(0, 0, 0, 0.5)));
+}
+
+.card__no-image {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, var(--ink-700), var(--ink-850));
+}
+.card__no-image__label {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+/* ---- Variante compacta ---- */
+.card--compact .card__meta { padding-top: 1rem; }
+.card--compact .card__hp-badge { font-size: 0.8rem; }
+
+/* ---- Placeholder (carta vacía / dorso) ---- */
+.card--placeholder {
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 50% 40%, var(--ink-700), var(--ink-900));
+  border: 1px solid var(--glass-border);
+  cursor: default;
+}
+.card__pokeball {
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, #fff 0 13%, #1a1a1a 14% 20%, transparent 21%),
+    linear-gradient(180deg, var(--poke-red) 0 47%, #1a1a1a 47% 53%, #f4f4f4 53% 100%);
+  box-shadow: inset 0 0 0 4px #1a1a1a, var(--shadow-md);
+  opacity: 0.55;
+}

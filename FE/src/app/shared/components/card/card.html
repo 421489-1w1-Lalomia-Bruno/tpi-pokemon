@@ -1,0 +1,75 @@
+@if (cardModel(); as card) {
+  @if (card.supertype === 'Hidden') {
+    <article class="card card--placeholder" aria-label="Carta boca abajo">
+      <div class="card__pokeball" aria-hidden="true"></div>
+    </article>
+  } @else {
+  <article
+    class="card"
+    [class.card--compact]="compact()"
+    [attr.data-holo]="holoTier()"
+    [attr.data-type]="primaryType()"
+    [holoTilt]="interactive() ? 13 : 0"
+    [holoTiltDisabled]="!interactive()"
+    tabindex="0"
+    role="button"
+    [attr.aria-label]="card.name"
+    (click)="onActivate()"
+    (keydown.enter)="onActivate($event)"
+    (keydown.space)="onActivate($event)"
+  >
+    <div class="card__frame">
+      <div class="card__image">
+        @if (card.imageUrl) {
+          <img [ngSrc]="card.imageUrl" width="245" height="342" [alt]="card.name" />
+        } @else {
+          <div class="card__no-image">
+            <span class="card__no-image__label">{{ card.supertype === 'Pokémon' ? card.name : card.supertype }}</span>
+          </div>
+        }
+
+        <!-- Capas del efecto holográfico (siguen al puntero vía variables CSS) -->
+        <div class="card__shine" aria-hidden="true"></div>
+        <div class="card__holo" aria-hidden="true"></div>
+        <div class="card__glare" aria-hidden="true"></div>
+
+        @if (energy().length > 0) {
+          <div class="card__energy-overlay">
+            @for (e of energy(); track $index) {
+              <span class="card__energy-gem" [attr.data-type]="e" [title]="e"></span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- HP flotante para Pokémon -->
+      @if (card.supertype === 'Pokémon' && card.hp) {
+        <span class="card__hp-badge">{{ card.hp }}<small>HP</small></span>
+      }
+
+      <!-- Franja inferior con datos clave (se revela en hover) -->
+      <footer class="card__meta">
+        <span class="card__name" [title]="card.name">{{ card.name }}</span>
+        <div class="card__tags">
+          @if (card.supertype === 'Pokémon') {
+            @for (type of card.types; track $index) {
+              <span class="card__type" [attr.data-type]="type">{{ type }}</span>
+            }
+            @if (card.stage) {
+              <span class="card__pill">{{ card.stage }}</span>
+            }
+          } @else if (card.supertype === 'Trainer') {
+            <span class="card__pill card__pill--trainer">{{ card.subtypes[0] || 'Trainer' }}</span>
+          } @else if (card.supertype === 'Energy') {
+            <span class="card__pill card__pill--energy">{{ card.types[0] || 'Energy' }} Energy</span>
+          }
+        </div>
+      </footer>
+    </div>
+  </article>
+  }
+} @else {
+  <article class="card card--placeholder" aria-label="Sin carta">
+    <div class="card__pokeball" aria-hidden="true"></div>
+  </article>
+}

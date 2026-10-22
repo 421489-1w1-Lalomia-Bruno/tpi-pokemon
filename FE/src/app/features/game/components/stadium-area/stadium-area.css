@@ -1,0 +1,64 @@
+:host {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stadium {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.95rem;
+  background:
+    linear-gradient(180deg, rgba(250, 204, 21, 0.12), rgba(250, 204, 21, 0.04));
+  border: 1px solid rgba(250, 204, 21, 0.28);
+  border-radius: var(--r-full);
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  max-width: 420px;
+}
+
+.stadium__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #fbbf24;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.stadium__label::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.9);
+}
+
+.stadium__card {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.stadium__name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #facc15;
+  white-space: nowrap;
+}
+
+.stadium__effect {
+  font-size: 0.65rem;
+  color: #a3a3a3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}

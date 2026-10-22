@@ -1,0 +1,117 @@
+:host { display: block; }
+
+.deck-list {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.deck-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.deck-list__title { font-size: 1.2rem; margin: 0; color: #fff; }
+
+/* ---- Estados ---- */
+.deck-list__loading,
+.deck-list__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto;
+  color: var(--text-dim);
+}
+.deck-list__empty-title { margin: 0; font-size: 1.3rem; color: #fff; }
+.deck-list__empty-text { margin: 0; color: var(--text-dim); }
+
+/* ---- Items ---- */
+.deck-list__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.6rem;
+}
+.deck-list__item {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+.deck-list__item-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--accent);
+  border-radius: 9px;
+  background: var(--glass-bg);
+  cursor: pointer;
+  text-align: left;
+}
+.deck-list__item-btn:active {
+  filter: brightness(0.9);
+}
+.deck-list__item-name { font-weight: 700; font-size: 1rem; color: #fff; }
+.deck-list__item-meta {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.deck-list__item-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.deck-list__item-badge--valid { background: var(--accent); color: #fff; }
+.deck-list__item-badge--invalid { background: rgba(255, 122, 122, 0.18); color: #ff9b9b; }
+.deck-list__item-badge--system { background: rgba(99, 179, 237, 0.20); color: #90cdf4; }
+
+.deck-list__delete-btn {
+  width: 42px;
+  border: 1px solid rgba(255, 122, 122, 0.4);
+  border-radius: 9px;
+  background: transparent;
+  color: #ff7a7a;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.deck-list__delete-btn:active { transform: scale(0.92); }
+
+/* ---- Equipar ---- */
+.deck-list__item--selected .deck-list__item-btn {
+  border-left-color: var(--accent-bright);
+  background: var(--glass-bg-strong);
+}
+.deck-list__equip-btn {
+  width: 42px;
+  border: 1px solid var(--glass-border);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--accent-bright);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.deck-list__equip-btn:active { transform: scale(0.92); }
+.deck-list__equip-btn--active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}

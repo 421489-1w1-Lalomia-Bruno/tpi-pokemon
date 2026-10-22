@@ -1,0 +1,67 @@
+@if (loading()) {
+  <div class="deck-list__loading" role="status" aria-live="polite">
+    <app-loading-spinner size="md" text="Cargando mazos…" />
+  </div>
+} @else if (decks().length === 0) {
+  <div class="deck-list__empty">
+    <h3 class="deck-list__empty-title">No tenés mazos todavía</h3>
+    <p class="deck-list__empty-text">Creá tu primer mazo para empezar a jugar</p>
+    <app-button variant="primary" (click)="createNew.emit()">+ Nuevo mazo</app-button>
+  </div>
+} @else {
+  <div class="deck-list">
+    <div class="deck-list__header">
+      <h2 class="deck-list__title">Mis Mazos</h2>
+      <app-button variant="primary" size="sm" (click)="createNew.emit()">+ Nuevo</app-button>
+    </div>
+    <ul class="deck-list__items">
+      @for (deck of decks(); track trackById($index, deck)) {
+        <li class="deck-list__item" [class.deck-list__item--selected]="deck.id === selectedDeckId()">
+          <button
+            class="deck-list__item-btn"
+            (click)="selectDeck.emit(deck)"
+            [attr.aria-label]="'Editar ' + deck.name"
+          >
+            <span class="deck-list__item-name">{{ deck.name }}</span>
+            <span class="deck-list__item-meta">
+              {{ deck.totalCards }} cartas
+              @if (deck.isValid) {
+                <span class="deck-list__item-badge deck-list__item-badge--valid">Válido</span>
+              } @else {
+                <span class="deck-list__item-badge deck-list__item-badge--invalid">Inválido</span>
+              }
+              @if (deck.source === 'PREDETERMINED') {
+                <span class="deck-list__item-badge deck-list__item-badge--system">Predeterminado</span>
+              }
+            </span>
+          </button>
+          <button
+            class="deck-list__equip-btn"
+            (click)="useInMatch.emit(deck)"
+            [class.deck-list__equip-btn--active]="deck.id === selectedDeckId()"
+            [attr.aria-label]="deck.id === selectedDeckId() ? deck.name + ' seleccionado para partida' : 'Usar ' + deck.name + ' en partida'"
+          >
+            @if (deck.id === selectedDeckId()) {
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <path d="M20 6L9 17l-5-5"/>
+              </svg>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>
+              </svg>
+            }
+          </button>
+          <button
+            class="deck-list__delete-btn"
+            (click)="deleteDeck.emit(deck); $event.stopPropagation()"
+            [attr.aria-label]="'Eliminar ' + deck.name"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+              <path d="M18 6L6 18"/><path d="M6 6l12 12"/>
+            </svg>
+          </button>
+        </li>
+      }
+    </ul>
+  </div>
+}

@@ -1,0 +1,17 @@
+@if (show()) {
+  <div class="retreat-overlay">
+    <div class="retreat-modal">
+      <h2>Retirar Pokémon</h2>
+      <p>Seleccioná un Pokémon de la banca para reemplazar al activo:</p>
+      <div class="retreat-modal__grid">
+        @for (pokemon of benchPokemon(); track pokemon.card.id; let i = $index) {
+          <button class="retreat-modal__card" (click)="retreat.emit(i)">
+            <span class="retreat-modal__card-name">{{ pokemon.card.name }}</span>
+            <span class="retreat-modal__card-hp">{{ pokemon.card.hp }} PS</span>
+          </button>
+        }
+      </div>
+      <button class="retreat-modal__cancel" (click)="cancel.emit()">Cancelar</button>
+    </div>
+  </div>
+}

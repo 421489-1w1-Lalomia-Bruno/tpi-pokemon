@@ -1,0 +1,44 @@
+<button
+  class="hand-drawer__toggle"
+  (click)="toggle()"
+  type="button"
+  [attr.aria-label]="'Mano (' + handCount() + ' cartas)'"
+>
+  <svg class="hand-drawer__toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
+    <path d="M6 9l6 6 6-6"/>
+  </svg>
+  Mano
+  <span class="hand-drawer__badge">{{ handCount() }}</span>
+</button>
+
+<div
+  class="hand-drawer__backdrop hand-drawer--hidden"
+  [class.hand-drawer--hidden]="!_isOpen()"
+  (click)="close()"
+  aria-label="Cerrar mano"
+></div>
+<div
+  class="hand-drawer__panel hand-drawer--hidden"
+  [class.hand-drawer--hidden]="!_isOpen()"
+>
+  <div class="hand-drawer__header">
+    <span class="hand-drawer__title">Mano ({{ handCount() }})</span>
+    <button class="hand-drawer__close" (click)="close()" type="button" aria-label="Cerrar mano">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="hand-drawer__hand">
+    <app-hand-area
+      [cards]="myHand()"
+      [isMyTurn]="isMyTurn()"
+      [phase]="phase()"
+      [hasAttachedEnergy]="hasAttachedEnergy()"
+      [playableCardIds]="playableCardIds()"
+      [myBoard]="gameState.myBoard()?.board ?? null"
+      [oppBoard]="gameState.opponentBoard()?.board ?? null"
+      (dragStarted)="close()"
+    />
+  </div>
+</div>

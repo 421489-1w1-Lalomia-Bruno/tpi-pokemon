@@ -1,0 +1,110 @@
+<aside class="catalog glass">
+  <div class="catalog__header">
+    <h2 class="catalog__title">Buscar cartas</h2>
+    @if (totalResults() > 0) {
+      <span class="catalog__count">{{ totalResults() }}</span>
+    }
+  </div>
+
+  <div class="catalog__filters">
+    <input
+      type="text"
+      class="catalog__search"
+      placeholder="Buscar por nombre…"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="searchTerm.set($event); onSearchChange()"
+      aria-label="Buscar cartas por nombre"
+    />
+
+    <div class="catalog__selects">
+      <select
+        class="catalog__select"
+        [ngModel]="selectedType()"
+        (ngModelChange)="selectedType.set($event); onFilterChange()"
+        aria-label="Filtrar por tipo de energía"
+      >
+        <option value="">Todos los tipos</option>
+        @for (type of energyTypes; track type) {
+          <option [value]="type">{{ type }}</option>
+        }
+      </select>
+
+      <select
+        class="catalog__select"
+        [ngModel]="selectedSupertype()"
+        (ngModelChange)="selectedSupertype.set($event); onFilterChange()"
+        aria-label="Filtrar por supertipo"
+      >
+        <option value="">Todos</option>
+        @for (supertype of supertypes; track supertype) {
+          <option [value]="supertype">{{ supertype }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="catalog__loading" role="status" aria-live="polite">
+      <app-loading-spinner size="sm" text="Buscando…" />
+    </div>
+  } @else if (error()) {
+    <div class="catalog__error" role="alert">
+      <span>{{ error() }}</span>
+    </div>
+  } @else {
+    <ul
+      class="catalog__list"
+      role="listbox"
+      aria-label="Lista de cartas"
+      cdkDropList
+      id="catalog-drop-list"
+      [cdkDropListConnectedTo]="['deck-drop-list']"
+      [cdkDropListData]="cards()"
+      [cdkDropListSortingDisabled]="true"
+    >
+      @for (card of cards(); track card.id) {
+        <li
+          class="catalog__item"
+          (click)="cardClicked.emit(card)"
+          cdkDrag
+          [cdkDragData]="card"
+        >
+          <div class="catalog__drag-preview" *cdkDragPreview>
+            <img [src]="card.imageUrl" [alt]="card.name" />
+          </div>
+
+          <span class="catalog__grip" aria-hidden="true">⠿</span>
+          <div class="catalog__item-image">
+            <img [src]="card.imageUrl" [alt]="card.name" loading="lazy" />
+          </div>
+          <div class="catalog__item-info">
+            <span class="catalog__item-name">{{ card.name }}</span>
+            <div class="catalog__item-meta">
+              @if (card.types.length) {
+                <span class="catalog__item-type" [attr.data-type]="card.types[0]">{{ card.types[0] }}</span>
+              }
+              @if (card.stage) {
+                <span class="catalog__item-stage">{{ card.stage }}</span>
+              }
+            </div>
+          </div>
+          <!-- @let qty = deckQuantity().get(card.id);
+          @if (qty) {
+            <span class="catalog__qty-badge">{{ qty }}</span>
+          } -->
+          <button
+            class="catalog__add-btn"
+            (click)="selectCard(card, $event)"
+            [disabled]="maxedCardIds().has(card.id) || blockedCardIds().has(card.id)"
+            [attr.aria-label]="'Agregar ' + card.name + ' al mazo'"
+            [title]="blockedCardIds().has(card.id) ? 'Requiere ' + (card.evolvesFrom ?? '') + ' en el mazo' : ''"
+          >+</button>
+        </li>
+      } @empty {
+        <li class="catalog__empty">
+          <span>No se encontraron cartas</span>
+        </li>
+      }
+    </ul>
+  }
+</aside>

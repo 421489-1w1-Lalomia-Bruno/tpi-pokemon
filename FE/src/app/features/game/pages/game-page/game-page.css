@@ -1,0 +1,64 @@
+/* =========================================================================
+   ARENA · Estadio de batalla futurista (estilo TCG Live)
+   Lado rival (rojo) arriba · lado jugador (cyan) abajo · piso en perspectiva
+   ========================================================================= */
+
+.game-container {
+  min-height: 100vh;
+  width: 100%;
+  color: var(--text);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(255, 60, 60, 0.16), transparent 55%),
+    radial-gradient(120% 75% at 50% 112%, rgba(34, 211, 238, 0.16), transparent 58%),
+    radial-gradient(90% 60% at 50% 50%, rgba(40, 90, 170, 0.10), transparent 70%),
+    linear-gradient(180deg, #0a0f1f 0%, #0b1426 32%, #0c182c 50%, #0b1426 68%, #0a0f1f 100%);
+}
+
+/* ─── Piso del estadio en perspectiva (grilla neón) ─── */
+.game-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(120, 200, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 200, 255, 0.05) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(120% 80% at 50% 50%, #000 35%, transparent 78%);
+  mask-image: radial-gradient(120% 80% at 50% 50%, #000 35%, transparent 78%);
+  opacity: 0.7;
+  animation: arena-grid 26s linear infinite;
+}
+
+@keyframes arena-grid {
+  to { background-position: 0 46px, 46px 0; }
+}
+
+/* ─── Aro central de la arena + viñeta ─── */
+.game-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 46% 30% at 50% 50%, rgba(110, 180, 255, 0.06), transparent 70%),
+    radial-gradient(ellipse 70% 60% at 50% 50%, transparent 45%, rgba(4, 7, 14, 0.55) 100%);
+}
+
+/* contenido por encima de las capas decorativas */
+.game-container > * {
+  position: relative;
+  z-index: 2;
+}
+
+.game-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}

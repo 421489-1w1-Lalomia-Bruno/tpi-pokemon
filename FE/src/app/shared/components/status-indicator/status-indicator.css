@@ -1,0 +1,40 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.status-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cond-color, #666);
+  animation: pulse-glow 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.status-dot__inner {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.status-label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* ─── Per-condition colors ─── */
+:host([data-condition='ASLEEP'])    { --cond-color: var(--status-asleep); }
+:host([data-condition='BURNED'])    { --cond-color: var(--status-burned); }
+:host([data-condition='CONFUSED'])  { --cond-color: var(--status-confused); }
+:host([data-condition='PARALYZED']) { --cond-color: var(--status-paralyzed); }
+:host([data-condition='POISONED'])  { --cond-color: var(--status-poisoned); }
